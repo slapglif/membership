@@ -30,6 +30,8 @@
                                         <th>Flag</th>
                                         <th>Admin</th>
                                         <th>Vote</th>
+                                        <th>Division</th>
+                                        <th>Rank</th>
 
                                     </tr>
                                 </thead>
@@ -62,7 +64,24 @@
                                             <button name="{% if users.vflag == 0 %}advt{% elif users.vflag == None %}advt{% elif users.vflag == 1 %}rmvt{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.vflag == 0 %}btn btn-info{% elif users.vflag == None %}btn btn-info{% elif users.vflag == 1 %}btn btn-inverse{% endif %}">{% if users.vflag == None %}Allow Voting{% elif users.vflag == 0 %}Allow Voting{% elif users.vflag == 1 %}Disallow Voting{% endif %}</button>
                                             </form>
                                         </td>
-
+                                        <td>
+                                        <form action="/users" method="post" name="dd1">
+                                        <select name="Inputs" id="Inputs" class="btn btn-success dropdown-toggle">
+                                            {% for choice in cat %}
+                                            <option value="{{users.steam_id}}/{{choice}}">{{choice}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        </form>
+                                        </td>
+                                        <td>
+                                        <form action="/users" method="post" name="dd2">
+                                        <select name="Inputs2" id="Inputs2" class="btn btn-success dropdown-toggle">
+                                            {% for choice in cat2 %}
+                                            <option value="{{users.steam_id}}/{{choice}}">{{choice}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        </form>
+                                        </td>
                                    </tr>
 
 
@@ -76,8 +95,23 @@
                     </div>
 
 
+	<script src="/static/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+<script>
+
+$(function() {
+    $('#Inputs').change(function() {
+        this.form.submit();
+    });
+});
+
+$(function() {
+    $('#Inputs2').change(function() {
+        this.form.submit();
+    });
+});
 
 
+</script>
 
 
 
