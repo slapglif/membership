@@ -23,6 +23,7 @@ class User(Base):
     voteye = Column(Integer())
     voteno = Column(Integer())
     voted = Column(String())
+    vflag = Column(Integer())
 
 
 

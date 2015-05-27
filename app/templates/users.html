@@ -29,6 +29,7 @@
                                         <th>Division</th>
                                         <th>Flag</th>
                                         <th>Admin</th>
+                                        <th>Vote</th>
 
                                     </tr>
                                 </thead>
@@ -53,7 +54,12 @@
                                         </td>
                                         <td>
                                             <form action="/users" method="POST">
-                                            <button name="{% if users.admin == 0 %}adadm{% elif users.admin == None %}adadm{% elif users.admin == 1 %}rmadm{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.admin == 0 and not None %}btn btn-info{% elif users.admin == None %}btn btn-info{% elif users.admin == 1 %}btn btn-inverse{% endif %}">{% if users.admin == None %}Make Admin{% elif users.admin == 0 %}Make Admin{% elif users.admin == 1 %}Remove Admin{% endif %}</button>
+                                            <button name="{% if users.admin == 0 %}adadm{% elif users.admin == None %}adadm{% elif users.admin == 1 %}rmadm{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.admin == 0 %}btn btn-info{% elif users.admin == None %}btn btn-info{% elif users.admin == 1 %}btn btn-inverse{% endif %}">{% if users.admin == None %}Make Admin{% elif users.admin == 0 %}Make Admin{% elif users.admin == 1 %}Remove Admin{% endif %}</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/users" method="POST">
+                                            <button name="{% if users.vflag == 0 %}advt{% elif users.vflag == None %}advt{% elif users.vflag == 1 %}rmvt{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.vflag == 0 %}btn btn-info{% elif users.vflag == None %}btn btn-info{% elif users.vflag == 1 %}btn btn-inverse{% endif %}">{% if users.vflag == None %}Allow Voting{% elif users.vflag == 0 %}Allow Voting{% elif users.vflag == 1 %}Disallow Voting{% endif %}</button>
                                             </form>
                                         </td>
 

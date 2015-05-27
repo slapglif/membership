@@ -458,6 +458,21 @@ def users():
 
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin)
 
+    if request.form.get('advt'):
+        x = request.form.get('advt')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].vflag = 1
+            db_session.commit()
+
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+
+    if request.form.get('rmvt'):
+        x = request.form.get('rmvt')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].vflag = 0
+            db_session.commit()
+
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
 
     if request.form.get('search'):
         userlist = []
