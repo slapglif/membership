@@ -429,11 +429,7 @@ def users():
             if [user2][0].div == xf:
                 userlist2 += [user2]
 
-        for user3 in userlist:
-            if user3 in userlist2:
-                userlist3 += [user3]
-
-            usl = userlist3
+            usl = userlist2
 
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin)
 
