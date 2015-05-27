@@ -364,7 +364,7 @@ def ap(ap):
                 vote = 0
             vote += 1
             [user1][0].voteye = vote
-            voted += [user1]
+            voted += [user1][0].nickname
             g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
@@ -378,7 +378,7 @@ def ap(ap):
                 vote = 0
             vote += 1
             [user1][0].voteno = vote
-            voted += [user1]
+            voted += [user1][0].nickname
             g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
