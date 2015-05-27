@@ -440,8 +440,6 @@ def users():
             if str(x) in str([user2][0].nickname.encode('ascii', 'ignore').lower()):
                 userlist2 += [user2]
 
-
-
         usl = userlist2
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin)
 
