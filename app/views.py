@@ -259,23 +259,23 @@ def ap(ap):
 
     output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
-    if ap == "Insurgency":
-        usl = divusl(ap)
+    if ap in "insurgency":
+        usl = divusl('Insurgency')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
-    if ap == "Counter-Strike":
-        usl = divusl(ap)
+    if ap in "counter-strike":
+        usl = divusl('Counter-Strike')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
-    if ap == "Minecraft":
-        usl = divusl(ap)
+    if ap in "Minecraft":
+        usl = divusl('Minecraft')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
-    if ap == "Space Engineers":
-        usl = divusl(ap)
+    if ap in "space engineers":
+        usl = divusl('Space Engineers')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
-    if ap == "Team Fortress 2":
-        usl = divusl(ap)
+    if ap in "Team Fortress 2":
+        usl = divusl('Team Fortress 2')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
-    if ap == "Garrys Mod":
-        usl = divusl(ap)
+    if ap in "Garrys Mod":
+        usl = divusl('Garrys Mod')
         output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
