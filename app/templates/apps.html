@@ -1,0 +1,108 @@
+{% extends 'd_layout.html' %}
+{% block body %}
+
+
+
+<div id="content" class="content">
+<div class="row">
+        			    <!-- begin col-6 -->
+
+			        <!-- begin panel -->
+                    <div class="panel panel-inverse" data-sortable-id="table-basic-4">
+                        <div class="panel-heading">
+
+                            <div class="panel-heading-btn">
+                            <form style="color: black;" action="/apps/search" method="POST">
+                              <input type="search" name="search">
+                              <input type="submit" value="Search" class="" >
+                            </form>
+
+
+                            </div>
+                            <h4 class="panel-title">Applications</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                       <th><a href="/apps" name="datesort">Application date</a></th>
+                                        <th>Division</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   {% if uslz %}
+
+                                       {% for users in uslz %}
+                                    <tr>
+
+                                       <td>
+                                           <a href="/apps/{{ users.steam_id }}"><button type="button" class="btn btn-white"> {{ users }}</button></a>
+                                        </td>
+                                        <td>
+                                            <form action="/apps/search" method="POST">
+                                            <button name="datebtn" type="submit" value="{{ users.date }}" class="btn btn-info m-r-5 m-b-5">{{ users.date }}</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/apps/search" method="POST">
+                                            <button name="divbtn" type="submit" value="{{ users.div }}" class="{% if users.div == 'cs' %}btn btn-success{% elif users.div == 'tf2' %}btn btn-primary{% elif users.div == 'ins' %}btn btn-warning{% elif users.div == 'se' %}btn btn-inverse{% elif users.div == 'mc' %}btn btn-danger{% elif users.div == 'pr' %}btn btn-white{% endif %}">{{ users.div }}</button>
+                                            </form>
+                                        </td>
+                                   </tr>
+
+
+                                   {% endfor %}
+                                    {% endif %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+</div>
+
+
+ <!-- Modal -->
+<div id="myModal" class="modal fade" data-backdrop="static" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+              <div class="panel-body">
+
+                  <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile">
+                                <dl class="dl-horizontal">
+                                    <dt>Username:</dt>
+                                    <dd>Testest Awesomness</dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>Game CP ID</dt>
+                                    <dd>#328754</dd>
+                                </dl>
+                                <dl class="dl-horizontal">
+                                    <dt>Current e-mail</dt>
+                                    <dd>testesta@gmail.com</dd>
+                                </dl>
+                            </div>
+                        </div>
+
+      </div>
+
+  </div>
+</div>
+
+
+
+
+
+    {% endblock %}
