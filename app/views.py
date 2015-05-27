@@ -357,25 +357,29 @@ def ap(ap):
 
     if request.form.get('voteyes'):
         x = request.form.get('voteyes')
+        voted = g.user.voted
         for user1 in User.query.filter_by(steam_id=x):
             vote = [user1][0].voteye
             if vote == None:
                 vote = 0
             vote += 1
             [user1][0].voteye = vote
-            g.user.voted = "1"
+            voted += [user1]
+            g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
             output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('voteno'):
         x = request.form.get('voteno')
+        voted = g.user.voted
         for user1 in User.query.filter_by(steam_id=x):
             vote = [user1][0].voteno
             if vote == None:
                 vote = 0
             vote += 1
             [user1][0].voteno = vote
-            g.user.voted = "1"
+            voted += [user1]
+            g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
             output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
