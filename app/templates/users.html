@@ -15,7 +15,7 @@
                             <div class="panel-heading-btn">
                             <form style="color: black;" action="/users/search" method="POST">
                               <input type="search" name="search">
-                              <input type="submit" value="Search" class="" >
+                              <input type="submit" value="Submit" class="" >
                             </form>
 
 
@@ -29,6 +29,7 @@
                                         <th>Username</th>
                                         <th>Division</th>
                                         <th>Flag</th>
+                                        <th>Admin</th>
 
                                     </tr>
                                 </thead>
@@ -49,6 +50,11 @@
                                         <td>
                                             <form action="/users" method="POST">
                                             <button name="{% if users.flag == '1' %}modbtn{% elif users.flag == '2' %}rmmbtn{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.flag == '1' %}btn btn-info{% elif users.flag == '2' %}btn btn-inverse{% endif %}">{% if users.flag == '1' %}Make Moderator{% elif users.flag == '2' %}Remove Moderator{% endif %}</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/users" method="POST">
+                                            <button name="{% if users.admin == 0 %}adadm{% elif users.admin == None %}adadm{% elif users.admin == 1 %}rmadm{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.admin == 0 and not None %}btn btn-info{% elif users.admin == None %}btn btn-info{% elif users.admin == 1 %}btn btn-inverse{% endif %}">{% if users.admin == None %}Make Admin{% elif users.admin == 0 %}Make Admin{% elif users.admin == 1 %}Remove Admin{% endif %}</button>
                                             </form>
                                         </td>
 

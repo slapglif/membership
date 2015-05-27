@@ -389,41 +389,52 @@ def users():
     else:
         output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
 
-    if request.form.get('search'):
-        userlist = []
-        userlist2 = []
-        userlist3 = []
-        x = request.form.get('search')
 
-        for user2 in User.query.filter(User.steam_id.isnot(None)):
-            userlist2 += [user2]
-        for user1 in User.query.filter_by(admin=None):
-            if str(x) in str([user1][0].nickname.encode('ascii', 'ignore').lower()):
-                userlist += [user1]
-
-        for user3 in userlist:
-            if user3 in userlist2:
-                userlist3 += [user3]
-
-
-        usl = userlist3
-        cnt = 0
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
 
     if request.form.get('modbtn'):
         x = request.form.get('modbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 2
             db_session.commit()
-            usl = admusl()
+
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
     if request.form.get('rmmbtn'):
         x = request.form.get('rmmbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 1
             db_session.commit()
-            usl = admusl()
+
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+    if request.form.get('adadm'):
+        x = request.form.get('adadm')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].admin = 1
+            db_session.commit()
+
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+    if request.form.get('rmadm'):
+        x = request.form.get('rmadm')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].admin = 0
+            db_session.commit()
+
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+
+    if request.form.get('search'):
+        userlist = []
+        userlist2 = []
+        userlist3 = []
+        xxd = []
+        x = request.form.get('search')
+
+        for user2 in User.query.filter(User.steam_id.isnot(None)):
+            if str(x) in str([user2][0].nickname.encode('ascii', 'ignore').lower()):
+                userlist2 += [user2]
+
+
+
+        usl = userlist2
+        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin)
 
 
     return output
