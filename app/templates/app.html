@@ -16,7 +16,7 @@
     </div>
     <div class="panel-body">
         <div class="content container-fluid">
-            <div class="account-settings col-md-4">
+
 
 {% if gogo %}
 
@@ -37,21 +37,34 @@
                                     <dt>Skills</dt>
                                     <dd>{{ gogo.skills }}</dd>
                                 </dl>
-                                <dl class="">
+
                                     <dt>Bio</dt>
                                     <dd>{{ gogo.bio }}</dd>
-                                </dl>
 
 
 
 
-
-            </div>
+<P>&nbsp;</P>
+              <div align="left">
+                  <dt>Status</dt>
+            <span class="{% if gogo.status == 'Pending' %}label label-default{% elif gogo.status == 'Under Review' %}label label-warning{% elif gogo.status == 'Approved' %}label label-success{% elif gogo.status == 'Denied' %}label label-danger{% endif %}">{{ gogo.status }}</span>
+    </div>
         </div>
     </div>
     </div>
     <div align="center">
+
+    {% if mod == '2' %}
+       <div align="center">
+           <form action="/apps/{{gogo.steam_id}}" method="POST">
+    <button type="submit" name="revbtn" value="{{gogo.steam_id}}" class="btn btn-white">Review App</button>   <button type="submit" name="aprbtn" value="{{gogo.steam_id}}"class="btn btn-success">Approve App</button>   <button type="submit" name="dnybtn" value="{{gogo.steam_id}}" class="btn btn-danger">Deny App</button>
+         </form>
+       </div>
+{% endif %}
+<p>&nbsp;</p>
     <a href="/apps"><button class="btn btn-danger">Go back to applications</button></a>
         </div>
+
+
     {% endif %}
 {% endblock %}

@@ -64,6 +64,7 @@ def apply():
         g.user.bio = request.form.get('bio')
         g.user.stuff = request.form.get('industries')
         g.user.disciplines = request.form.get('disciplines')
+        g.user.status = "Pending"
         now = mylist[0]
         g.user.date = str(now)
 
@@ -81,19 +82,19 @@ def apply():
         db_session.commit()
 
 
-        if g.user.div == 'cs':
+        if g.user.div == 'Counter-Strike':
             xy = cs
-        if g.user.div == 'ins':
+        if g.user.div == 'Insurgency':
             xy = ins
-        if g.user.div == 'tf2':
+        if g.user.div == 'Team Fortress 2':
             xy = tf2
-        if g.user.div == 'gmod':
+        if g.user.div == 'Gmod':
             xy = gmod
-        if g.user.div == 'mc':
+        if g.user.div == 'Minecraft':
             xy = mc
-        if g.user.div == 'se':
+        if g.user.div == 'Space Engineers':
             xy = se
-        if g.user.div == 'pr':
+        if g.user.div == 'Public Relations':
             xy = pr
 
 
@@ -117,29 +118,6 @@ def req():
     return output
 
 
-
-@app.route('/select', methods=['GET', 'POST'])
-def select():
-    g.user = None
-    form = xForm()
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-        redirect(url_for("success"))
-
-    if 'player' in request.form:
-        g.user.ptype = True
-        db_session.commit()
-        return redirect(url_for("signup"))
-
-    if 'team' in request.form:
-        g.user.ptype = False
-        db_session.commit()
-        return redirect(url_for("signup"))
-
-    output = render_template('select.html',username=g.user,form=form)
-    return output
-
-
 @app.route('/success', methods=['GET', 'POST'])
 def success():
     g.user = None
@@ -152,8 +130,6 @@ def success():
     output = render_template('success.html',username=g.user)
 
     return output
-
-
 
 
 def get_steam_userinfo(steam_id):
@@ -195,6 +171,7 @@ def create_or_login(response):
     g.user = User.get_or_create(match.group(1))
     steamdata = get_steam_userinfo(g.user.steam_id)
     g.user.nickname = steamdata['personaname']
+    g.user.flag = 1
     db_session.commit()
 
     session['user_id'] = g.user.user_id
@@ -208,19 +185,17 @@ def apps():
     form = xForm
     g.user = None
     usl = ulist()
-    num = count([])
     cnt = 0
+
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
         for us in usl:
             cnt += 1
-        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),num=num,admin=admin,count=cnt)
+        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,count=cnt)
 
     else:
-        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),num=num,admin=False,count=0)
-
-
+        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),admin=False,count=0)
 
     return output
 
@@ -248,25 +223,23 @@ def ap(ap):
     userlist = []
     userlist2 = []
     userlist3 = []
+    admin = None
     usl = None
+    mod = None
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
+        if g.user:
+            admin = g.user.admin
+            mod = g.user.flag
     pplz = User.query.filter_by(steam_id=ap)
     for user in pplz:
         gogo = user
 
-    output = render_template('app.html',username=g.user,form=form,gogo=gogo)
-
-
-
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
+    output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod)
 
 
     if form.search.data:
         x = form.search.data
-
-
 
         for user2 in User.query.filter(User.email.isnot(None)):
             userlist2 += [user2]
@@ -285,7 +258,7 @@ def ap(ap):
 
         usl = userlist3
         cnt = 0
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
 
     if request.form.get("datebtn"):
 
@@ -293,7 +266,6 @@ def ap(ap):
         userlist = []
         userlist2 = []
         userlist3 = []
-        userlist4 = []
         for user2 in User.query.filter(User.email.isnot(None)):
             userlist2 += [user2]
         for user1 in User.query.filter_by(admin=None):
@@ -305,7 +277,7 @@ def ap(ap):
                 userlist3 += [user3]
 
             usl = userlist3
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
 
 
     if request.form.get("divbtn"):
@@ -313,7 +285,6 @@ def ap(ap):
         userlist = []
         userlist2 = []
         userlist3 = []
-        userlist4 = []
         for user2 in User.query.filter(User.email.isnot(None)):
             userlist2 += [user2]
         for user1 in User.query.filter_by(admin=None):
@@ -326,12 +297,139 @@ def ap(ap):
 
             usl = userlist3
 
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+
+
+    if request.form.get("statbtn"):
+        sbt = request.form.get("statbtn")
+
+        userlist = []
+        userlist2 = []
+        userlist3 = []
+        for user2 in User.query.filter(User.email.isnot(None)):
+            userlist2 += [user2]
+        for user1 in User.query.filter_by(admin=None):
+            if [user1][0].status == sbt:
+                userlist += [user1]
+
+        for user3 in userlist:
+            if user3 in userlist2:
+                userlist3 += [user3]
+
+            usl = userlist3
+
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+
+
 
     if request.form.get('datesort'):
         ds = request.form.get('datesort')
         ulsz = ulist()
-        output = render_template('apps.html',username=g.user,form=form,uslz=ulsz)
+        output = render_template('apps.html',username=g.user,form=form,uslz=ulsz,mod=mod)
+
+
+    if request.form.get('revbtn'):
+        x = request.form.get('revbtn')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].status = "Under Review"
+            db_session.commit()
+            ulsz = ulist()
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+    if request.form.get('aprbtn'):
+        x = request.form.get('aprbtn')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].status = "Approved"
+            db_session.commit()
+            ulsz = ulist()
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+    if request.form.get('dnybtn'):
+        x = request.form.get('dnybtn')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].status = "Denied"
+            db_session.commit()
+            ulsz = ulist()
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+
+
+
 
     return output
 
+
+
+def admusl():
+    userlist = []
+    userlist2 = []
+    userlist3 = []
+    for user2 in User.query.filter(User.steam_id.isnot(None)):
+        userlist2 += [user2]
+    for user1 in User.query.filter_by(admin=None):
+        userlist += [user1]
+
+    for user3 in userlist:
+        if user3 in userlist2:
+            userlist3 += [user3]
+
+    return userlist3
+
+@app.route('/users', methods=['GET', 'POST'])
+@app.route('/users/search', methods=['GET', 'POST'])
+def users():
+    form = xForm
+    g.user = None
+    usl = admusl()
+
+    admin = None
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        admin = g.user.admin
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+
+    else:
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
+
+    if request.form.get('search'):
+        userlist = []
+        userlist2 = []
+        userlist3 = []
+        x = request.form.get('search')
+
+        for user2 in User.query.filter(User.steam_id.isnot(None)):
+            userlist2 += [user2]
+        for user1 in User.query.filter_by(admin=None):
+            if str(x) in str([user1][0].nickname.encode('ascii', 'ignore').lower()):
+                userlist += [user1]
+
+        for user3 in userlist:
+            if user3 in userlist2:
+                userlist3 += [user3]
+
+
+        usl = userlist3
+        cnt = 0
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+
+    if request.form.get('modbtn'):
+        x = request.form.get('modbtn')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].flag = 2
+            db_session.commit()
+            usl = admusl()
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+    if request.form.get('rmmbtn'):
+        x = request.form.get('rmmbtn')
+        for user1 in User.query.filter_by(steam_id=x):
+            [user1][0].flag = 1
+            db_session.commit()
+            usl = admusl()
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+
+
+    return output
+
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()

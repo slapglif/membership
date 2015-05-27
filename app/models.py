@@ -18,6 +18,8 @@ class User(Base):
     disciplines = Column(String())
     date = Column(String())
     age = Column(String())
+    status = Column(String())
+    flag = Column(String())
 
 
     @staticmethod

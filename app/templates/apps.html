@@ -26,8 +26,11 @@
                                 <thead>
                                     <tr>
                                         <th>Username</th>
-                                       <th><a href="/apps" name="datesort">Application date</a></th>
+
+                                       <th>Application date</th>
+
                                         <th>Division</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,7 +49,12 @@
                                         </td>
                                         <td>
                                             <form action="/apps/search" method="POST">
-                                            <button name="divbtn" type="submit" value="{{ users.div }}" class="{% if users.div == 'cs' %}btn btn-success{% elif users.div == 'tf2' %}btn btn-primary{% elif users.div == 'ins' %}btn btn-warning{% elif users.div == 'se' %}btn btn-inverse{% elif users.div == 'mc' %}btn btn-danger{% elif users.div == 'pr' %}btn btn-white{% endif %}">{{ users.div }}</button>
+                                            <button name="divbtn" type="submit" value="{{ users.div }}" class="{% if users.div == 'Counter-Strike' %}btn btn-success{% elif users.div == 'Team Fortress 2' %}btn btn-primary{% elif users.div == 'Insurgency' %}btn btn-warning{% elif users.div == 'Space Engineers' %}btn btn-inverse{% elif users.div == 'Minecraft' %}btn btn-danger{% elif users.div == 'Public Relations' %}btn btn-white{% endif %}">{{ users.div }}</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/apps/search" method="POST">
+                                            <button name="statbtn" type="submit" value="{{ users.status }}" class="{% if users.status == 'Pending' %}btn btn-default{% elif users.status == 'Under Review' %}btn btn-warning{% elif users.status == 'Approved' %}btn btn-success{% elif users.status == 'Denied' %}btn btn-danger{% endif %}">{{ users.status }}</button>
                                             </form>
                                         </td>
                                    </tr>

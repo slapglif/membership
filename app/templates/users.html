@@ -1,0 +1,94 @@
+{% extends 'd_layout.html' %}
+{% block body %}
+{% if admin == 1 %}
+
+{% if uslz %}
+
+
+{% for users in uslz %}
+
+
+
+            <div class="panel panel-inverse" data-sortable-id="table-basic-4">
+                        <div class="panel-heading">
+
+                            <div class="panel-heading-btn">
+                            <form style="color: black;" action="/users/search" method="POST">
+                              <input type="search" name="search">
+                              <input type="submit" value="Search" class="" >
+                            </form>
+
+
+                            </div>
+                            <h4 class="panel-title">Users</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Division</th>
+                                        <th>Flag</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   {% if uslz %}
+
+                                       {% for users in uslz %}
+                                    <tr>
+
+                                       <td>
+                                            {{ users }}
+                                        </td>
+                                        <td>
+                                            <form action="/users/search" method="POST">
+                                            <button name="divbtn" type="submit" value="{{ users.div }}" class="{% if users.div == 'Counter-Strike' %}btn btn-success{% elif users.div == 'Team Fortress 2' %}btn btn-primary{% elif users.div == 'Insurgency' %}btn btn-warning{% elif users.div == 'Space Engineers' %}btn btn-inverse{% elif users.div == 'Minecraft' %}btn btn-danger{% elif users.div == 'Public Relations' %}btn btn-white{% endif %}">{{ users.div }}</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/users" method="POST">
+                                            <button name="{% if users.flag == '1' %}modbtn{% elif users.flag == '2' %}rmmbtn{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.flag == '1' %}btn btn-info{% elif users.flag == '2' %}btn btn-inverse{% endif %}">{% if users.flag == '1' %}Make Moderator{% elif users.flag == '2' %}Remove Moderator{% endif %}</button>
+                                            </form>
+                                        </td>
+
+                                   </tr>
+
+
+                                   {% endfor %}
+                                    {% endif %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+{% endif %}
+
+{% else %}
+
+<div align="center">
+
+    <a class="landing-sign btn-main btn-sell btn-block btn btn-lg" href="/login" role="button"><i class="fa fa-steam"></i> You must be an admin to use this feature!</a>
+
+</div>
+
+
+{% endif %}
+
+{% endblock %}
