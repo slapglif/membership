@@ -240,14 +240,6 @@ def ulist():
 
     return userlist3
 
-def count(list):
-    numz = []
-    for user in User.query.filter():
-        if not user in list:
-            numz += [1]
-    return numz
-
-
 
 @app.route("/apps/<ap>", methods=['GET', 'POST'])
 def ap(ap):
