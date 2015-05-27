@@ -420,6 +420,24 @@ def users():
 
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
 
+    if request.form.get("divbtn"):
+        xf = request.form.get("divbtn")
+        userlist = []
+        userlist2 = []
+        userlist3 = []
+        for user2 in User.query.filter(User.email.isnot(None)):
+            if [user2][0].div == xf:
+                userlist2 += [user2]
+
+        for user3 in userlist:
+            if user3 in userlist2:
+                userlist3 += [user3]
+
+            usl = userlist3
+
+        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin)
+
+
     if request.form.get('search'):
         userlist = []
         userlist2 = []
