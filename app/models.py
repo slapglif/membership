@@ -20,6 +20,10 @@ class User(Base):
     age = Column(String())
     status = Column(String())
     flag = Column(String())
+    voteye = Column(Integer())
+    voteno = Column(Integer())
+    voted = Column(String())
+
 
 
     @staticmethod

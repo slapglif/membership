@@ -65,6 +65,9 @@ def apply():
         g.user.stuff = request.form.get('industries')
         g.user.disciplines = request.form.get('disciplines')
         g.user.status = "Pending"
+        g.user.voteye = 0
+        g.user.voteno = 0
+        g.user.voted = "0"
         now = mylist[0]
         g.user.date = str(now)
 
@@ -226,16 +229,18 @@ def ap(ap):
     admin = None
     usl = None
     mod = None
+    div = None
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         if g.user:
             admin = g.user.admin
             mod = g.user.flag
+            div = g.user.div
     pplz = User.query.filter_by(steam_id=ap)
     for user in pplz:
         gogo = user
 
-    output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod)
+    output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
 
     if form.search.data:
@@ -258,7 +263,7 @@ def ap(ap):
 
         usl = userlist3
         cnt = 0
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
     if request.form.get("datebtn"):
 
@@ -277,7 +282,7 @@ def ap(ap):
                 userlist3 += [user3]
 
             usl = userlist3
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get("divbtn"):
@@ -297,7 +302,7 @@ def ap(ap):
 
             usl = userlist3
 
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get("statbtn"):
@@ -318,14 +323,14 @@ def ap(ap):
 
             usl = userlist3
 
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
 
     if request.form.get('datesort'):
         ds = request.form.get('datesort')
         ulsz = ulist()
-        output = render_template('apps.html',username=g.user,form=form,uslz=ulsz,mod=mod)
+        output = render_template('apps.html',username=g.user,form=form,uslz=ulsz,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get('revbtn'):
@@ -334,21 +339,46 @@ def ap(ap):
             [user1][0].status = "Under Review"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('aprbtn'):
         x = request.form.get('aprbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].status = "Approved"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('dnybtn'):
         x = request.form.get('dnybtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].status = "Denied"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod)
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+
+    if request.form.get('voteyes'):
+        x = request.form.get('voteyes')
+        for user1 in User.query.filter_by(steam_id=x):
+            vote = [user1][0].voteye
+            if vote == None:
+                vote = 0
+            vote += 1
+            [user1][0].voteye = vote
+            g.user.voted = "1"
+            db_session.commit()
+            ulsz = ulist()
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+    if request.form.get('voteno'):
+        x = request.form.get('voteno')
+        for user1 in User.query.filter_by(steam_id=x):
+            vote = [user1][0].voteno
+            if vote == None:
+                vote = 0
+            vote += 1
+            [user1][0].voteno = vote
+            g.user.voted = "1"
+            db_session.commit()
+            ulsz = ulist()
+            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
 
 

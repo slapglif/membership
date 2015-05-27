@@ -48,10 +48,34 @@
               <div align="left">
                   <dt>Status</dt>
             <span class="{% if gogo.status == 'Pending' %}label label-default{% elif gogo.status == 'Under Review' %}label label-warning{% elif gogo.status == 'Approved' %}label label-success{% elif gogo.status == 'Denied' %}label label-danger{% endif %}">{{ gogo.status }}</span>
-    </div>
+            <br>
+                  <br><span class="">{% if gogo.voteye == None %}0 Yes Votes{% elif gogo.voteye %}{{ gogo.voteye }} Yes Votes{% endif %}</span><br><span class="">{% if gogo.voteno == None %}0 No Votes{% elif gogo.voteno %}{{gogo.voteno}} No Votes{% endif %}</span>
         </div>
     </div>
     </div>
+
+
+
+
+
+
+                  <div align="center">
+
+                      {% if gogo.status == "Under Review" %}
+                      {% if gogo.div == div %}
+                      {% if voted == "no" %}
+                      <form action="/apps/{{gogo.steam_id}}" method="POST">
+                         <button type="submit" name="voteyes" value="{{gogo.steam_id}}" class="btn btn-success">Vote Yes</button>   <button type="submit" name="voteno" value="{{gogo.steam_id}}" class="btn btn-danger">Vote No</button>
+                      </form>
+                      {% endif %}
+                    {% endif %}
+                      {% endif %}
+
+                  </div>
+
+</div>
+
+    <P>&nbsp;</P>
     <div align="center">
 
     {% if mod == '2' %}
@@ -66,5 +90,8 @@
         </div>
 
 
+
+
     {% endif %}
+
 {% endblock %}
