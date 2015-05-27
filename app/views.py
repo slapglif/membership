@@ -219,6 +219,23 @@ def ulist():
     return userlist3
 
 
+
+def divusl(xf):
+    userlist = []
+    userlist2 = []
+    userlist3 = []
+    for user2 in User.query.filter(User.email.isnot(None)):
+        userlist2 += [user2]
+    for user1 in User.query.filter_by(admin=None):
+        if [user1][0].div == xf:
+            userlist += [user1]
+
+    for user3 in userlist:
+        if user3 in userlist2:
+            userlist3 += [user3]
+
+        return userlist3
+
 @app.route("/apps/<ap>", methods=['GET', 'POST'])
 def ap(ap):
     gogo = None
@@ -241,6 +258,25 @@ def ap(ap):
         gogo = user
 
     output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+
+    if ap == "Insurgency":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+    if ap == "Counter-Strike":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+    if ap == "Minecraft":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+    if ap == "Space Engineers":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+    if ap == "Team Fortress 2":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+    if ap == "Garrys Mod":
+        usl = divusl(ap)
+        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if form.search.data:
