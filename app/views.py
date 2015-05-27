@@ -363,14 +363,9 @@ def admusl():
     userlist3 = []
     for user2 in User.query.filter(User.steam_id.isnot(None)):
         userlist2 += [user2]
-    for user1 in User.query.filter_by(admin=None):
-        userlist += [user1]
 
-    for user3 in userlist:
-        if user3 in userlist2:
-            userlist3 += [user3]
 
-    return userlist3
+    return userlist2
 
 @app.route('/users', methods=['GET', 'POST'])
 @app.route('/users/search', methods=['GET', 'POST'])
