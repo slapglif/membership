@@ -328,13 +328,10 @@ def ap(ap):
 
         output = render_template('apps.html',username=g.user,form=form,uslz=usl)
 
-
     if request.form.get('datesort'):
         ds = request.form.get('datesort')
         ulsz = ulist()
         output = render_template('apps.html',username=g.user,form=form,uslz=ulsz)
-
-
 
     return output
 
