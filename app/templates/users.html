@@ -6,8 +6,6 @@
 
 
 
-
-
             <div class="panel panel-inverse" data-sortable-id="table-basic-4">
                         <div class="panel-heading">
 
@@ -27,11 +25,12 @@
                                     <tr>
                                         <th>Username</th>
                                         <th>Division</th>
+
                                         <th>Flag</th>
                                         <th>Admin</th>
                                         <th>Vote</th>
-                                        <th>Division</th>
-                                        <th>Rank</th>
+                                        <th>Set Div</th>
+                                        <th>Set Rank</th>
 
                                     </tr>
                                 </thead>
@@ -66,23 +65,36 @@
                                         </td>
                                         <td>
                                         <form action="/users" method="post" name="dd1">
-                                        <select name="Inputs" id="Inputs" class="btn btn-success dropdown-toggle">
-                                            {% for choice in cat %}
-                                            <option value="{{users.steam_id}}/{{choice}}">{{choice}}</option>
-                                            {% endfor %}
+                                        <select onchange="this.form.submit()" name="Inputs" id="Inputs" class="btn btn-success dropdown-toggle">
+
+                                            <option id="1" label="Team Fortress 2" value="{{users.steam_id}}/Team Fortress 2"></option>
+                                            <option id="2" label="Insurgency" value="{{users.steam_id}}/Insurgency"></option>
+                                            <option id="3" label="Counter-Strike" value="{{users.steam_id}}/Counter-Strike"></option>
+                                            <option id="4" label="Garrys Mod" value="{{users.steam_id}}/Garrys Mod"></option>
+                                            <option id="5" label="Minecraft" value="{{users.steam_id}}/Minecraft"></option>
+                                            <option id="6" label="Space Engineers" value="{{users.steam_id}}/Space Engineers"></option>
+
                                         </select>
                                         </form>
                                         </td>
                                         <td>
                                         <form action="/users" method="post" name="dd2">
-                                        <select name="Inputs2" id="Inputs2" class="btn btn-success dropdown-toggle">
-                                            {% for choice in cat2 %}
-                                            <option value="{{users.steam_id}}/{{choice}}">{{choice}}</option>
-                                            {% endfor %}
+                                        <select name="Inputs2" onchange="this.form.submit()" id="Inputs2" class="btn btn-success dropdown-toggle">
+
+
+                                            <option id="7" label="L1" value="{{users.steam_id}}/L1"></option>
+                                            <option id="8" label="L2" value="{{users.steam_id}}/L2"></option>
+                                            <option id="9" label="L3" value="{{users.steam_id}}/L3"></option>
+                                            <option id="10" label="L4" value="{{users.steam_id}}/L4"></option>
+                                            <option id="11" label="JO" value="{{users.steam_id}}/JO"></option>
+                                            <option id="12" label="Officer" value="{{users.steam_id}}/Officer"></option>
+                                            <option id="12" label="ADL" value="{{users.steam_id}}/ADL"A></option>
+
                                         </select>
                                         </form>
                                         </td>
                                    </tr>
+
 
 
                                    {% endfor %}
@@ -95,24 +107,19 @@
                     </div>
 
 
-	<script src="/static/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
-<script>
 
-$(function() {
-    $('#Inputs').change(function() {
-        this.form.submit();
-    });
-});
 
-$(function() {
-    $('#Inputs2').change(function() {
-        this.form.submit();
-    });
-});
 
+{% for choice in cat %}
+
+{% endfor %}
+
+
+
+
+<script src="/static/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
 
 </script>
-
 
 
 

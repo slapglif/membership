@@ -62,7 +62,7 @@
                   <div align="center">
 
                       {% if gogo.status == "Under Review" %}
-                      {% if gogo.div == div %}
+                      {% if gogo.div == div or div == "all"%}
                       {% if gogo.nickname not in voted %}
                       <form action="/apps/{{gogo.steam_id}}" method="POST">
                          <button type="submit" name="voteyes" value="{{gogo.steam_id}}" class="btn btn-success">Vote Yes</button>   <button type="submit" name="voteno" value="{{gogo.steam_id}}" class="btn btn-danger">Vote No</button>

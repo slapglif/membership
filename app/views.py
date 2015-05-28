@@ -161,6 +161,9 @@ def logout():
     session.pop('admin', None)
     return redirect(open_id.get_next_url())
 
+
+
+
 @app.before_request
 def before_request():
     g.user = None
@@ -442,34 +445,40 @@ def admusl():
 def users():
     form = xForm(request.form)
     g.user = None
-    usl = admusl()
+    usl = None
 
     admin = None
     cat = ["Team Fortress 2","Insurgency","Counter-Strike","Garrys Mod","Minecraft","Space Engineers"]
     cat2 = ["L1","L2","L4","JO","Officer","ADL"]
     form.dd1.choices = [(x,x) for x in cat]
 
+
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        admin = g.user.admin
+        usl = admusl()
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+
+    else:
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False,cat=cat,cat2=cat2)
+
+
+
     if request.form.get('Inputs'):
         div = request.form.get('Inputs')
         for user1 in User.query.filter_by(steam_id=div.split('/')[0]):
             [user1][0].div = div.rsplit('/')[1]
             db_session.commit()
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
     if request.form.get('Inputs2'):
         rnk = request.form.get('Inputs2')
         for user1 in User.query.filter_by(steam_id=rnk.split('/')[0]):
             [user1][0].rank = rnk.rsplit('/')[1]
             db_session.commit()
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-        admin = g.user.admin
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
-
-    else:
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False,cat=cat,cat2=cat2)
 
 
     if request.form.get('modbtn'):
@@ -533,7 +542,7 @@ def users():
     if request.form.get('search'):
         userlist = []
         userlist2 = []
-        userlist3 = []
+        userlist3 = {}
         xxd = []
         x = request.form.get('search')
 
@@ -546,6 +555,44 @@ def users():
 
 
     return output
+
+
+
+
+
+
+
+
+@app.route("/users/<op>", methods=['GET', 'POST'])
+def op(op):
+    gogo = None
+    form = xForm()
+    userlist = []
+    userlist2 = []
+    userlist3 = []
+    admin = None
+    usl = None
+    mod = None
+    div = None
+    cat = ["Team Fortress 2","Insurgency","Counter-Strike","Garrys Mod","Minecraft","Space Engineers"]
+    cat2 = ["L1","L2","L4","JO","Officer","ADL"]
+    form.dd1.choices = [(x,x) for x in cat]
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        if g.user:
+            admin = g.user.admin
+            mod = g.user.flag
+            div = g.user.div
+    pplz = User.query.filter_by(steam_id=op)
+    for user in pplz:
+        gogo = user
+
+    output = render_template('user.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted,cat=cat,cat2=cat2)
+
+    return output
+
+
+
 
 
 
