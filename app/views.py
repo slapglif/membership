@@ -468,7 +468,7 @@ def users():
             [user1][0].div = div.rsplit('/')[1]
             db_session.commit()
             usl = stuffz(stuff)
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
     if request.form.get('Inputs2'):
         rnk = request.form.get('Inputs2')
@@ -476,7 +476,7 @@ def users():
             [user1][0].rank = rnk.rsplit('/')[1]
             db_session.commit()
             usl = stuffz(stuff)
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
 
 
@@ -517,8 +517,11 @@ def users():
         for user2 in User.query.filter(User.email.isnot(None)):
             if [user2][0].div == xf:
                 userlist2 += [user2]
-            usl = userlist2
+        if xf == 'None':
+            for user2 in User.query.filter(User.div == None):
+                userlist2 += [user2]
 
+        usl = userlist2
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('advt'):
