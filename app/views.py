@@ -517,18 +517,14 @@ def users():
         for user2 in User.query.filter(User.email.isnot(None)):
             if [user2][0].div == xf:
                 userlist2 += [user2]
-                stuff = stuffz(userlist2)
         if xf == 'None':
             for user2 in User.query.filter(User.div == None):
                 userlist2 += [user2]
-                stuff = stuffz(userlist2)
         if xf == 'Clan Wide':
             for user2 in User.query.filter(User.steam_id.isnot(None)):
                 if [user2][0].div == xf:
                     userlist2 += [user2]
-                    stuff = stuffz(userlist2)
-
-        usl = stuff
+        usl = userlist2
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('advt'):
