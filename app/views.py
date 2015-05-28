@@ -442,8 +442,7 @@ def users():
     form = xForm(request.form)
     g.user = None
     usl = admusl()
-    global stuff
-    stuff = usl
+    stuff = stuffz(usl)
     admin = None
     cat = ["Team Fortress 2","Insurgency","Counter-Strike","Garrys Mod","Minecraft","Space Engineers"]
     cat2 = ["L1","L2","L4","JO","Officer","ADL"]
@@ -454,9 +453,6 @@ def users():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
-
-
     else:
         output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False,cat=cat,cat2=cat2)
 
@@ -468,7 +464,7 @@ def users():
             [user1][0].div = div.rsplit('/')[1]
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
     if request.form.get('Inputs2'):
         rnk = request.form.get('Inputs2')
@@ -476,7 +472,7 @@ def users():
             [user1][0].rank = rnk.rsplit('/')[1]
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
 
 
@@ -486,28 +482,28 @@ def users():
             [user1][0].flag = 2
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmmbtn'):
         x = request.form.get('rmmbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 1
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('adadm'):
         x = request.form.get('adadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 1
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmadm'):
         x = request.form.get('rmadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 0
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get("divbtn"):
         xf = request.form.get("divbtn")
@@ -521,12 +517,11 @@ def users():
             for user2 in User.query.filter(User.div == None):
                 userlist2 += [user2]
         if xf == 'Clan Wide':
-            for user2 in User.steam_id.isnot(None):
+            for user2 in User.query.filter(User.steam_id.isnot(None)):
                 if [user2][0].div == xf:
-                    userlist2 += [user2]
-
+                    userlist2 += [user2]            
         usl = userlist2
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('advt'):
         x = request.form.get('advt')
@@ -534,7 +529,7 @@ def users():
             [user1][0].vflag = 1
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('rmvt'):
         x = request.form.get('rmvt')
@@ -542,7 +537,7 @@ def users():
             [user1][0].vflag = 0
             db_session.commit()
             usl = stuffz(stuff)
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('search'):
         userlist = []
@@ -557,8 +552,11 @@ def users():
 
         usl = userlist2
 
-        stuff = stuffz(usl)
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+
+    if stuff:
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+    else:
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
 
     return output
