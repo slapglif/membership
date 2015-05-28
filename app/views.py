@@ -454,7 +454,7 @@ def users():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
 
     else:
