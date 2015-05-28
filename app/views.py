@@ -568,8 +568,6 @@ def stuffz(zz):
 
 
 
-
-
 @app.route("/users/<op>", methods=['GET', 'POST'])
 def op(op):
     gogo = None
