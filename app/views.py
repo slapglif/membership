@@ -290,10 +290,6 @@ def ap(ap):
         for user1 in User.query.filter_by(admin=None):
             if str(x) in str([user1][0].nickname.encode('ascii', 'ignore').lower()):
                 userlist += [user1]
-                print "stuff is %s"%x
-                print [user1][0].nickname
-            else:
-                print "%s not in %s"%(x,[user1][0].nickname)
 
         for user3 in userlist:
             if user3 in userlist2:
@@ -445,8 +441,9 @@ def admusl():
 def users():
     form = xForm(request.form)
     g.user = None
-    usl = None
-
+    usl = admusl()
+    global stuff
+    stuff = usl
     admin = None
     cat = ["Team Fortress 2","Insurgency","Counter-Strike","Garrys Mod","Minecraft","Space Engineers"]
     cat2 = ["L1","L2","L4","JO","Officer","ADL"]
@@ -457,8 +454,8 @@ def users():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
-        usl = admusl()
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+
 
     else:
         output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False,cat=cat,cat2=cat2)
@@ -470,6 +467,7 @@ def users():
         for user1 in User.query.filter_by(steam_id=div.split('/')[0]):
             [user1][0].div = div.rsplit('/')[1]
             db_session.commit()
+            usl = stuffz(stuff)
         output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
     if request.form.get('Inputs2'):
@@ -477,6 +475,7 @@ def users():
         for user1 in User.query.filter_by(steam_id=rnk.split('/')[0]):
             [user1][0].rank = rnk.rsplit('/')[1]
             db_session.commit()
+            usl = stuffz(stuff)
         output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
 
@@ -486,28 +485,28 @@ def users():
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 2
             db_session.commit()
-
+            usl = stuffz(stuff)
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmmbtn'):
         x = request.form.get('rmmbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 1
             db_session.commit()
-
+            usl = stuffz(stuff)
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('adadm'):
         x = request.form.get('adadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 1
             db_session.commit()
-
+            usl = stuffz(stuff)
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmadm'):
         x = request.form.get('rmadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 0
             db_session.commit()
-
+            usl = stuffz(stuff)
             output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get("divbtn"):
@@ -518,7 +517,6 @@ def users():
         for user2 in User.query.filter(User.email.isnot(None)):
             if [user2][0].div == xf:
                 userlist2 += [user2]
-
             usl = userlist2
 
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
@@ -528,16 +526,16 @@ def users():
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].vflag = 1
             db_session.commit()
-
-            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+            usl = stuffz(stuff)
+            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('rmvt'):
         x = request.form.get('rmvt')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].vflag = 0
             db_session.commit()
-
-            output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+            usl = stuffz(stuff)
+            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('search'):
         userlist = []
@@ -551,13 +549,22 @@ def users():
                 userlist2 += [user2]
 
         usl = userlist2
+
+        stuff = stuffz(usl)
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
 
     return output
 
 
+def stuffz(zz):
+    userlist2 = []
+    for user2 in User.query.filter(User.steam_id.isnot(None)):
+        for x in zz:
+            if x in [user2]:
+                userlist2 += [user2]
 
+    return userlist2
 
 
 
