@@ -32,11 +32,11 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 def index():
     form = xForm()
     g.user = None
-    output = render_template('index.html',username=g.user,form=form)
+    output = render_template('index.html',username=g.user,form=form,admin=g.user.admin)
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
-        output = render_template('req.html',username=g.user,form=form)
+        output = render_template('req.html',username=g.user,form=form,admin=g.user.admin)
 
     flash("errors")
     return output
