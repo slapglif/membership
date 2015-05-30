@@ -10,7 +10,7 @@
                         <div class="panel-heading">
 
                             <div class="panel-heading-btn">
-                            <form style="color: black;" action="/users/search" method="POST">
+                            <form style="color: black;" action="/admin/users/search" method="POST">
                               <input type="search" name="search">
                               <input type="submit" value="Submit" class="" >
                             </form>
@@ -44,27 +44,27 @@
                                             {{ users }}
                                         </td>
                                         <td>
-                                            <form action="/users/search" method="POST">
+                                            <form action="/admin/users/search" method="POST">
                                             <button name="divbtn" type="submit" value="{{ users.div }}" class="{% if users.div == 'Counter-Strike' %}btn btn-success{% elif users.div == 'Team Fortress 2' %}btn btn-primary{% elif users.div == 'Insurgency' %}btn btn-warning{% elif users.div == 'Space Engineers' %}btn btn-inverse{% elif users.div == 'Minecraft' %}btn btn-danger{% elif users.div == 'Public Relations' %}btn btn-white{% endif %}">{{ users.div }}</button>
                                             </form>
                                         </td>
                                         <td>
-                                            <form action="/users" method="POST">
+                                            <form action="/admin/users" method="POST">
                                             <button name="{% if users.flag == '1' %}modbtn{% elif users.flag == '2' %}rmmbtn{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.flag == '1' %}btn btn-info{% elif users.flag == '2' %}btn btn-inverse{% endif %}">{% if users.flag == '1' %}Make Moderator{% elif users.flag == '2' %}Remove Moderator{% endif %}</button>
                                             </form>
                                         </td>
                                         <td>
-                                            <form action="/users" method="POST">
+                                            <form action="/admin/users" method="POST">
                                             <button name="{% if users.admin == 0 %}adadm{% elif users.admin == None %}adadm{% elif users.admin == 1 %}rmadm{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.admin == 0 %}btn btn-info{% elif users.admin == None %}btn btn-info{% elif users.admin == 1 %}btn btn-inverse{% endif %}">{% if users.admin == None %}Make Admin{% elif users.admin == 0 %}Make Admin{% elif users.admin == 1 %}Remove Admin{% endif %}</button>
                                             </form>
                                         </td>
                                         <td>
-                                            <form action="/users" method="POST">
+                                            <form action="/admin/users" method="POST">
                                             <button name="{% if users.vflag == 0 %}advt{% elif users.vflag == None %}advt{% elif users.vflag == 1 %}rmvt{% endif %}" value="{{users.steam_id}}" type="submit" class="{% if users.vflag == 0 %}btn btn-info{% elif users.vflag == None %}btn btn-info{% elif users.vflag == 1 %}btn btn-inverse{% endif %}">{% if users.vflag == None %}Allow Voting{% elif users.vflag == 0 %}Allow Voting{% elif users.vflag == 1 %}Disallow Voting{% endif %}</button>
                                             </form>
                                         </td>
                                         <td>
-                                        <form action="/users" method="post" name="dd1">
+                                        <form action="/admin/users" method="post" name="dd1">
                                         <select onchange="this.form.submit()" name="Inputs" id="Inputs" class="btn btn-success dropdown-toggle">
                                             <option id="" label="" value="">Edit</option>
                                             <option id="1" label="Team Fortress 2" value="{{users.steam_id}}/Team Fortress 2"></option>
@@ -80,7 +80,7 @@
                                         </form>
                                         </td>
                                         <td>
-                                        <form action="/users" method="post" name="dd2">
+                                        <form action="/admin/users" method="post" name="dd2">
                                         <select name="Inputs2" onchange="this.form.submit()" id="Inputs2" class="btn btn-success dropdown-toggle">
 
                                             <option id="" label="" value="">Edit</option>
