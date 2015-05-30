@@ -518,7 +518,7 @@ def users():
             if [user2][0].div == xf:
                 userlist2 += [user2]
         if xf == 'None':
-            for user2 in User.query.filter_by(User.div == None):
+            for user2 in User.query.filter_by(div=None):
                 userlist2 += [user2]
 
         usl = userlist2
