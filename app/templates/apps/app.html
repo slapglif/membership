@@ -50,7 +50,8 @@
             <span class="{% if gogo.status == 'Pending' %}label label-default{% elif gogo.status == 'Under Review' %}label label-warning{% elif gogo.status == 'Approved' %}label label-success{% elif gogo.status == 'Denied' %}label label-danger{% endif %}">{{ gogo.status }}</span>
             <br>
                   <br><span class="">{% if gogo.voteye == None %}0 Yes Votes{% elif gogo.voteye %}{{ gogo.voteye }} Yes Votes{% endif %}</span><br><span class="">{% if gogo.voteno == None %}0 No Votes{% elif gogo.voteno %}{{gogo.voteno}} No Votes{% endif %}</span>
-        </div>
+
+                  </div>
     </div>
     </div>
 
@@ -60,7 +61,7 @@
 
 
                   <div align="center">
-
+            {% if voted %}
                       {% if gogo.status == "Under Review" %}
                       {% if gogo.div == div or div == "all"%}
                       {% if gogo.nickname not in voted %}
@@ -70,6 +71,7 @@
                       {% endif %}
                     {% endif %}
                       {% endif %}
+                  {% endif %}
 
                   </div>
 
