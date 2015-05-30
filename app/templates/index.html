@@ -117,9 +117,9 @@
 
  {% else %}
 
-                            <p class="text-center lead text-gray margin-bottom-45">
-        You already have an application pending!
-        be sure to check the forums for an update on it's progress.  </p>
+                            <p class="text-center lead text-gray margin-bottom-15">
+        You already have an application pending!<br>
+        Application status: <span class="{% if username.status == 'Pending' %}label label-default{% elif username.status == 'Under Review' %}label label-warning{% elif username.status == 'Approved' %}label label-success{% elif username.status == 'Denied' %}label label-danger{% endif %}">{{ username.status }}</span> </p>
 
 
 

@@ -1,5 +1,5 @@
 from app import db_session,Base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, BLOB
 
 class User(Base):
     __tablename__ = 'user'
