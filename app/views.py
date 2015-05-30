@@ -438,8 +438,8 @@ def admusl():
 
     return userlist2
 
-@app.route('/users', methods=['GET', 'POST'])
-@app.route('/users/search', methods=['GET', 'POST'])
+@app.route('/admin/users', methods=['GET', 'POST'])
+@app.route('/admin/users/search', methods=['GET', 'POST'])
 def users():
     form = xForm(request.form)
     g.user = None
