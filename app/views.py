@@ -514,8 +514,7 @@ def users():
         userlist = []
         userlist2 = []
         userlist3 = []
-        for user2 in User.query.filter(User.email.isnot(None)):
-            if [user2][0].div == xf:
+        for user2 in User.query.filter_by(div=xf):
                 userlist2 += [user2]
         if xf == 'None':
             for user2 in User.query.filter_by(div=None):
