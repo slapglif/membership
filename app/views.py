@@ -31,8 +31,8 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = xForm()
-    g.user = None
-    output = render_template('index.html',username=g.user,form=form,admin=g.user.admin)
+
+    output = render_template('index.html',username=g.user,form=form,admin=None)
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
