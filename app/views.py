@@ -429,21 +429,37 @@ def ap(ap):
 
 
 def admusl():
-    userlist = []
     userlist2 = []
-    userlist3 = []
     for user2 in User.query.filter(User.steam_id.isnot(None)):
         userlist2 += [user2]
-
-
     return userlist2
+
+def uslfilter(usl, x):
+    userlist2 = []
+    for user2 in usl:
+        if str(x) in str([user2][0].nickname.encode('ascii', 'ignore').lower()):
+             userlist2 += [user2]
+    return userlist2
+
 @app.route('/admin', methods=['GET', 'POST'])
 @app.route('/admin/users', methods=['GET', 'POST'])
 @app.route('/admin/users/search', methods=['GET', 'POST'])
 def users():
+
     form = xForm(request.form)
     g.user = None
+
     usl = admusl()
+    usl.reverse()
+
+    if (request.path == '/admin/users/search'):
+        session['sfilter'] = ''
+
+    if (not request.form.get('search')) and (session.has_key('sfilter')): # if it's not a search, reset the usl
+       sf = session['sfilter']
+       if (len(sf) > 0):
+           usl = uslfilter(usl, sf)
+
     admin = None
 
     cat = ["Team Fortress 2","Insurgency","Counter-Strike","Garrys Mod","Minecraft","Space Engineers"]
@@ -451,14 +467,13 @@ def users():
     form.dd1.choices = [(x,x) for x in cat]
 
 
-
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
 
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
     else:
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False,cat=cat,cat2=cat2)
+        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=False,cat=cat,cat2=cat2)
 
 
 
@@ -540,30 +555,14 @@ def users():
             output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('search'):
-        userlist = []
-        userlist2 = []
-        userlist3 = {}
-        xxd = []
         x = request.form.get('search')
+        usl = uslfilter(usl, x)
 
-        for user2 in User.query.filter(User.steam_id.isnot(None)):
-            if str(x) in str([user2][0].nickname.encode('ascii', 'ignore').lower()):
-                userlist2 += [user2]
-
-        usl = userlist2
+        session['sfilter'] = x
         output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     return output
 
-
-def stuffz(zz):
-    userlist2 = []
-    for user2 in User.query.filter(User.steam_id.isnot(None)):
-        for x in zz:
-            if x in [user2]:
-                userlist2 += [user2]
-
-    return userlist2
 
 
 
