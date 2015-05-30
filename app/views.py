@@ -32,11 +32,11 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 def index():
     form = xForm()
 
-    output = render_template('index.html',username=g.user,form=form,admin=None)
+    output = render_template('apps/index.html',username=g.user,form=form,admin=None)
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
-        output = render_template('req.html',username=g.user,form=form,admin=g.user.admin)
+        output = render_template('apps/req.html',username=g.user,form=form,admin=g.user.admin)
 
     flash("errors")
     return output
@@ -50,9 +50,9 @@ def apply():
         g.user = User.query.get(session['user_id'])
         if g.user is not None:
             email = g.user.email
-        output = render_template('index.html',username=g.user,form=form,email=email)
+        output = render_template('apps/index.html',username=g.user,form=form,email=email)
     else:
-        output = render_template('index.html',username=g.user,form=form,email=email)
+        output = render_template('apps/index.html',username=g.user,form=form,email=email)
 
     if form.ign.data != None:
         g.user.ign = form.ign.data
@@ -105,7 +105,7 @@ def apply():
         r = requests.get("http://108.61.149.51/1/info.php?div=%s&name=%s&steam_id=%s"%(xy,g.user.ign,g.user.steam_id))
         print r
         print r.url
-        output = render_template('success.html',username=g.user,form=form)
+        output = render_template('apps/success.html',username=g.user,form=form)
 
     return output
 
@@ -117,7 +117,7 @@ def req():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
 
-    output = render_template('req.html',username=g.user,form=form)
+    output = render_template('apps/req.html',username=g.user,form=form)
 
     return output
 
@@ -131,7 +131,7 @@ def success():
 
 
 
-    output = render_template('success.html',username=g.user)
+    output = render_template('apps/success.html',username=g.user)
 
     return output
 
@@ -202,10 +202,10 @@ def apps():
         admin = g.user.admin
         for us in usl:
             cnt += 1
-        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,count=cnt)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=reversed(usl),admin=admin,count=cnt)
 
     else:
-        output = render_template('apps.html',username=g.user,form=form,uslz=reversed(usl),admin=False,count=0)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=reversed(usl),admin=False,count=0)
 
     return output
 
@@ -264,26 +264,26 @@ def ap(ap):
     for user in pplz:
         gogo = user
 
-    output = render_template('app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+    output = render_template('apps/app.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
     if ap in "insurgency":
         usl = divusl('Insurgency')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
     if ap in "counter-strike":
         usl = divusl('Counter-Strike')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
     if ap in "minecraft":
         usl = divusl('Minecraft')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
     if ap in "space engineers":
         usl = divusl('Space Engineers')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
     if ap in "team fortress 2":
         usl = divusl('Team Fortress 2')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
     if ap in "garrys mod":
         usl = divusl('Garrys Mod')
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if form.search.data:
@@ -302,7 +302,7 @@ def ap(ap):
 
         usl = userlist3
         cnt = 0
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
     if request.form.get("datebtn"):
 
@@ -321,7 +321,7 @@ def ap(ap):
                 userlist3 += [user3]
 
             usl = userlist3
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get("divbtn"):
@@ -341,7 +341,7 @@ def ap(ap):
 
             usl = userlist3
 
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get("statbtn"):
@@ -362,14 +362,14 @@ def ap(ap):
 
             usl = userlist3
 
-        output = render_template('apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=usl,mod=mod,div=div,voted=g.user.voted)
 
 
 
     if request.form.get('datesort'):
         ds = request.form.get('datesort')
         ulsz = ulist()
-        output = render_template('apps.html',username=g.user,form=form,uslz=ulsz,mod=mod,div=div,voted=g.user.voted)
+        output = render_template('apps/apps.html',username=g.user,form=form,uslz=ulsz,mod=mod,div=div,voted=g.user.voted)
 
 
     if request.form.get('revbtn'):
@@ -378,21 +378,21 @@ def ap(ap):
             [user1][0].status = "Under Review"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+            output = render_template('apps/app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('aprbtn'):
         x = request.form.get('aprbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].status = "Approved"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+            output = render_template('apps/app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('dnybtn'):
         x = request.form.get('dnybtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].status = "Denied"
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+            output = render_template('apps/app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
     if request.form.get('voteyes'):
         x = request.form.get('voteyes')
@@ -407,7 +407,7 @@ def ap(ap):
             g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+            output = render_template('apps/app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
     if request.form.get('voteno'):
         x = request.form.get('voteno')
         voted = g.user.voted
@@ -421,7 +421,7 @@ def ap(ap):
             g.user.voted = voted
             db_session.commit()
             ulsz = ulist()
-            output = render_template('app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
+            output = render_template('apps/app.html',username=g.user,form=form,uslz=ulsz,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted)
 
 
     return output
@@ -445,13 +445,13 @@ def uslfilter(usl, x):
 @app.route('/admin/users', methods=['GET', 'POST'])
 @app.route('/admin/users/search', methods=['GET', 'POST'])
 def users():
-
+    
     form = xForm(request.form)
     g.user = None
 
     usl = admusl()
     usl.reverse()
-
+    
     if (request.path == '/admin/users/search'):
         session['sfilter'] = ''
 
@@ -471,9 +471,9 @@ def users():
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
 
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+        output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
     else:
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=False,cat=cat,cat2=cat2)
+        output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=False,cat=cat,cat2=cat2)
 
 
 
@@ -483,7 +483,7 @@ def users():
             [user1][0].div = div.rsplit('/')[1]
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
     if request.form.get('Inputs2'):
         rnk = request.form.get('Inputs2')
@@ -491,7 +491,7 @@ def users():
             [user1][0].rank = rnk.rsplit('/')[1]
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2,div=[user1][0].div)
 
 
 
@@ -501,28 +501,28 @@ def users():
             [user1][0].flag = 2
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmmbtn'):
         x = request.form.get('rmmbtn')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].flag = 1
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/user.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
     if request.form.get('adadm'):
         x = request.form.get('adadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 1
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
     if request.form.get('rmadm'):
         x = request.form.get('rmadm')
         for user1 in User.query.filter_by(steam_id=x):
             [user1][0].admin = 0
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get("divbtn"):
         xf = request.form.get("divbtn")
@@ -536,7 +536,7 @@ def users():
                 userlist2 += [user2]
 
         usl = userlist2
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+        output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('advt'):
         x = request.form.get('advt')
@@ -544,7 +544,7 @@ def users():
             [user1][0].vflag = 1
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('rmvt'):
         x = request.form.get('rmvt')
@@ -552,14 +552,14 @@ def users():
             [user1][0].vflag = 0
             db_session.commit()
 
-            output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+            output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     if request.form.get('search'):
         x = request.form.get('search')
         usl = uslfilter(usl, x)
 
         session['sfilter'] = x
-        output = render_template('users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
+        output = render_template('apps/users.html',username=g.user,form=form,uslz=usl,admin=admin,cat=cat,cat2=cat2)
 
     return output
 
@@ -590,7 +590,7 @@ def op(op):
     for user in pplz:
         gogo = user
 
-    output = render_template('user.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted,cat=cat,cat2=cat2)
+    output = render_template('apps/users.html',username=g.user,form=form,gogo=gogo,admin=admin,mod=mod,div=div,voted=g.user.voted,cat=cat,cat2=cat2)
 
     return output
 
@@ -605,9 +605,18 @@ def roster():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+        output = render_template('homepage/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
     else:
-        output = render_template('users.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
+        output = render_template('homepage/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
+    return output
+
+
+
+@app.route("/home/")
+def home():
+
+    output = render_template('homepage/index.html')
+    return output
 
 
 
