@@ -7,25 +7,6 @@ class User(Base):
     steam_id = Column(String(40))
     nickname = Column(String(80))
     email = Column(String(80))
-    community = Column(String(80))
-    ign = Column(String(80))
-    div = Column(String(80))
-    time = Column(String(80))
-    admin = Column(Boolean())
-    skills = Column(String())
-    stuff = Column(String())
-    bio = Column(String())
-    disciplines = Column(String())
-    date = Column(String())
-    age = Column(String())
-    status = Column(String())
-    flag = Column(String())
-    voteye = Column(Integer())
-    voteno = Column(Integer())
-    voted = Column(String())
-    vflag = Column(Integer())
-    rank = Column(Integer())
-
 
 
     @staticmethod

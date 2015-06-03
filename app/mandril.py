@@ -4,7 +4,7 @@ requests.packages.urllib3.disable_warnings()
 date = int(time.time())
 
 
-def drill(username,email):
+def drill(subject,body,email):
     try:
         mandrill_client = mandrill.Mandrill('r7F-p7uKBCL5kWBxMf-rhw')
         message = {
@@ -12,21 +12,21 @@ def drill(username,email):
          'auto_text': None,
          'bcc_address': '',
          'from_email': 'noreply@freebieservers.com',
-         'from_name': 'xTcR',
+         'from_name': 'Freebie',
          'global_merge_vars': [{'content': 'merge1 content', 'name': 'merge1'}],
          'headers': {'Reply-To': 'noreply@freebieservers.com'},
-         'html': '<p>Thank you for registering %s</p><p>You will be informed via forum & steam about the status of your application!</p>'%username,
+         'html': '<p>%s</p>'%body,
          'important': False,
          'inline_css': None,
          'merge': True,
          'merge_language': 'mailchimp',
          'merge_vars': [{'rcpt': '%s'%email,
                          'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
-         'metadata': {'website': 'www.xtcr.net'},
+         'metadata': {'website': 'www.freebieservers.com'},
          'preserve_recipients': None,
          'return_path_domain': None,
          'signing_domain': None,
-         'subject': 'Membership Application',
+         'subject': '%s'%subject,
          'tags': ['application'],
          'to': [{'email': '%s'%email,
                  'type': 'to'}],
