@@ -13,8 +13,6 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
-db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
-cursor = db.cursor()
 
 def tnow():
     tlist = []
@@ -35,6 +33,7 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 
 
 @app.route('/', methods=['GET', 'POST'])
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     choice = 1
@@ -45,13 +44,120 @@ def index():
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
 
-
-
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
 
     output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'])
+
+    flash("errors")
+    return output
+
+
+@app.route('/<sz>', methods=['GET', 'POST'])
+@app.route('/index/<sz>', methods=['GET', 'POST'])
+def isz(sz):
+    choice = 1
+    form = xForm()
+    admin = None
+    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    stats = sr.json()
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
+
+    sload = None
+    sram = None
+    shdd = None
+    shddf = None
+
+    if sz:
+        if sz == "1":
+            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+            cursor = db.cursor()
+
+            ###build server box list###
+            fetch = "SELECT * FROM servers WHERE id = '13'"
+            cursor.execute(fetch)
+            list = cursor.fetchall()
+            for table in list:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
+                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
+                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
+
+                stdin1,stdout1,stderr1 = ssh.exec_command(x)
+                stdin2,stdout2,stderr2 = ssh.exec_command(y)
+                stdin3,stdout3,stderr3 = ssh.exec_command(z)
+                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
+                sload = stdout1.readlines()
+                sram = stdout2.readlines()
+                shdd = stdout3.readlines()
+                shddf = stdout4.readlines()
+                ssh.close()
+            db.close()
+
+    if sz:
+        if sz == "2":
+            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+            cursor = db.cursor()
+            ###build server box list###
+            fetch = "SELECT * FROM servers WHERE id = '14'"
+            cursor.execute(fetch)
+            list = cursor.fetchall()
+            for table in list:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
+                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
+                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
+
+                stdin1,stdout1,stderr1 = ssh.exec_command(x)
+                stdin2,stdout2,stderr2 = ssh.exec_command(y)
+                stdin3,stdout3,stderr3 = ssh.exec_command(z)
+                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
+                sload = stdout1.readlines()
+                sram = stdout2.readlines()
+                shdd = stdout3.readlines()
+                shddf = stdout4.readlines()
+                ssh.close()
+            db.close()
+    if sz:
+        if sz == "4":
+            ###build server box list###
+            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+            cursor = db.cursor()
+            fetch = "SELECT * FROM servers WHERE id = '16'"
+            cursor.execute(fetch)
+            list = cursor.fetchall()
+            for table in list:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
+                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
+                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
+                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
+
+                stdin1,stdout1,stderr1 = ssh.exec_command(x)
+                stdin2,stdout2,stderr2 = ssh.exec_command(y)
+                stdin3,stdout3,stderr3 = ssh.exec_command(z)
+                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
+                sload = stdout1.readlines()
+                sram = stdout2.readlines()
+                shdd = stdout3.readlines()
+                shddf = stdout4.readlines()
+                ssh.close()
+            db.close()
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'],load=sload[0].strip('%'),ram=sram[0],hdd=shdd,free=shddf)
 
     flash("errors")
     return output
@@ -204,12 +310,14 @@ def updaterun():
     admin = None
     output = redirect("/")
 
-
+    db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+    cursor = db.cursor()
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
         output = redirect("/")
     ###build server box list###
+
     fetch = "SELECT * FROM servers WHERE ip != '0'"
     cursor.execute(fetch)
     list = cursor.fetchall()
@@ -225,7 +333,7 @@ def updaterun():
         ssh.exec_command("screen -dmS updatehl2dm ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/hl2dm +app_update 232370 validate +exit")
         ssh.exec_command("screen -dmS updatel4d2 ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/l4d2 +app_update 222860 validate +exit")
         ssh.exec_command("screen -dmS updateins ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/ins +app_update 237410 validate +exit")
-
+    db.close()
     flash("errors")
     return output
 

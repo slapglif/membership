@@ -31,12 +31,14 @@
 
                   		</div>
                         {% for server in servers %}
-                  		<div class="col-md-2 col-sm-2 box0">
+                  		<div class="col-md-2 col-sm-2 box0" style="">
+						 <a href="/{{ server['data']['id'] }}">
                   			<div class="box1">
 					  			<span class="fa fa-database"></span>
 					  			<h3><label class="{% if server['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
                   			</div>
 					  			<p>{% if server['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
+						 </a>
                   		</div>
 						{% endfor %}
 {#						<div class="col-md-2 col-sm-2 box0">#}
@@ -69,11 +71,11 @@
 								<script>
 									var doughnutData = [
 											{
-												value: 70,
+												value: {{ load }},
 												color:"#FF6B6B"
 											},
 											{
-												value : 30,
+												value : 100,
 												color : "#fdfdfd"
 											}
 										];
@@ -83,23 +85,44 @@
 								<p>April 17, 2014</p>
 								<footer>
 									<div class="pull-left">
-										<h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
 									</div>
 									<div class="pull-right">
-										<h5>60% Used</h5>
+										<h5>{{ load }}% Used</h5>
 									</div>
 								</footer>
                       		</div><! -- /darkblue panel -->
 	                      	</div>
 
-	<div class="col-md-4 mb">
+						<div class="col-md-4 mb">
    							<div class="darkblue-panel pn">
                       			<div class="darkblue-header">
 						  			<h5>SERVER LOAD</h5>
                       			</div>
-				<canvas id="pie" height="300" width="400" style="width: 400px; height: 300px;"></canvas>
-								</div>
-		</div>
+								<canvas id="serverstatus01" height="120" width="120" style="width: 120px; height: 120px;"></canvas>
+								<script>
+									var doughnutData = [
+											{
+												value: {{ ram }},
+												color:"#FF6B6B"
+											},
+											{
+												value : 100,
+												color : "#fdfdfd"
+											}
+										];
+										var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
+								</script>
+
+								<p>April 17, 2014</p>
+								<footer>
+									<div class="pull-left">
+									</div>
+									<div class="pull-right">
+										<h5>{{ load }}% Used</h5>
+									</div>
+								</footer>
+                      		</div><! -- /darkblue panel -->
+	                      	</div>
 						<!-- TWITTER PANEL -->
 						<div class="col-md-4 mb">
                       		<div class="darkblue-panel pn">
@@ -110,11 +133,11 @@
 								<script>
 									var doughnutData = [
 											{
-												value: 60,
+												value: {{ hdd }},
 												color:"#68dff0"
 											},
 											{
-												value : 40,
+												value : 100,
 												color : "#444c57"
 											}
 										];
@@ -123,10 +146,10 @@
 								<p>April 17, 2014</p>
 								<footer>
 									<div class="pull-left">
-										<h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
+										<h5><i class="fa fa-hdd-o"></i> {{ free }} GB Free</h5>
 									</div>
 									<div class="pull-right">
-										<h5>60% Used</h5>
+										<h5>{{ hdd }}Used</h5>
 									</div>
 								</footer>
                       		</div><! -- /darkblue panel -->
