@@ -13,7 +13,6 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
-from cpuload import GetCpuLoad
 
 def tnow():
     tlist = []
@@ -36,70 +35,45 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    choice = 1
     form = xForm()
     admin = None
     sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
     stats = sr.json()
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
-    x = GetCpuLoad()
-    data = x.getcpuload()
-    print data
+
 
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
 
-    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats)
+    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'])
 
     flash("errors")
     return output
+
+@app.context_processor
+def page_proc():
+    def change_page(page):
+        return page
+    return dict(change_page=change_page)
 
 
 
 @app.route('/hdd', methods=['GET', 'POST'])
 def hdd():
+    choice = 2
     form = xForm()
     admin = None
-    output = render_template('hdd.html',username=g.user,form=form,admin=admin)
+    output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
 
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
-        output = render_template('hdd.html',username=g.user,form=form,admin=admin)
-
-    flash("errors")
-    return output
-
-
-
-@app.route('/email', methods=['GET', 'POST'])
-def email():
-    form = xForm()
-    admin = None
-    output = render_template('email.html',username=g.user,form=form,admin=admin)
-
-
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-        #admin = g.user.admin
-
-    output = render_template('email.html',username=g.user,form=form,admin=admin,emailsent=False)
-
-    if form.subject.data != None and form.body.data != None:
-        s = form.subject.data
-        b = form.body.data
-        db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
-        cursor = db.cursor()
-        sql = "SELECT * FROM users WHERE active != '3'"
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        for row in results:
-            email = row[2]
-            drill(s,b,email)
-        output = render_template('email.html',username=g.user,form=form,admin=admin,emailsent=True)
+        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
 
     flash("errors")
     return output
@@ -109,6 +83,7 @@ def email():
 def hddseeker():
     form = xForm()
     admin = None
+    choice = 2
     output = render_template('hdd.html',username=g.user,form=form,admin=admin)
 
     if 'user_id' in session:
@@ -116,11 +91,84 @@ def hddseeker():
         #admin = g.user.admin
         #r = requests.get("http://freebieservers.com:62992/api/SeekUsers?user=testest&pass=testest")
         #results = r.json()
-        output = render_template('hdd.html',username=g.user,form=form,admin=admin)
+        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
 
     flash("errors")
     return output
 
+@app.route('/email', methods=['GET', 'POST'])
+def email():
+    choice = 3
+    form = xForm()
+    admin = None
+
+    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    stats = sr.json()
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
+
+    output = render_template('email.html',form=form,servers=sstats,emailsent=False,sselect=None,page=choice)
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+
+    flash("errors")
+    return output
+
+
+@app.route('/email/<srv>', methods=['GET', 'POST'])
+def emails(srv):
+    form = xForm()
+    admin = None
+    choice = 3
+    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    stats = sr.json()
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
+
+    output = render_template('email.html',form=form,servers=sstats,emailsent=False,sselect=srv,page=choice)
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+
+    if form.subject.data != None and form.body.data != None:
+        s = form.subject.data
+        b = form.body.data
+        db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+        cursor = db.cursor()
+        if srv == all:
+            sql = "SELECT * FROM users WHERE active != '3'"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            for row in results:
+                email = row[2]
+                drill(s,b,email)
+            output = render_template('email.html',username=g.user,form=form,admin=admin,emailsent=True,servers=sstats,sselect=srv,page=choice)
+        else:
+            output = render_template('email.html',username=g.user,form=form,admin=admin,emailsent=False,servers=sstats,sselect=srv,page=choice)
+
+    flash("errors")
+    return output
+
+
+
+@app.route('/update', methods=['GET', 'POST'])
+def update():
+    choice = 4
+    form = xForm()
+    admin = None
+    output = render_template('update.html',username=g.user,form=form,admin=admin,page=choice)
+
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+        output = render_template('update.html',username=g.user,form=form,admin=admin,page=choice)
+
+    flash("errors")
+    return output
 
 
 
@@ -161,7 +209,6 @@ def before_request():
 
 @open_id.after_login
 def create_or_login(response):
-    form = xForm()
     match = _steam_id_re.search(response.identity_url)
     g.user = User.get_or_create(match.group(1))
     steamdata = get_steam_userinfo(g.user.steam_id)

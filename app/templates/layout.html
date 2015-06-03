@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -80,15 +82,15 @@
                           <i class="fa fa-dashboard"></i>
                           <span>Dashboard</span>
                       </a>
-                      <a class="" href="/hdd">
+                      <a class="{% if choice == 2 %}active{% endif %}" href="/hdd">
                           <i class="fa fa-hdd-o"></i>
                           <span>Manage HDD</span>
                       </a>
-                       <a class="" href="/email">
+                       <a class="{% if choice == 3 %}active{% endif %}" href="/email">
                           <i class="fa fa-envelope-o"></i>
                           <span>Mass Email</span>
                       </a>
-                         <a class="" href="/update">
+                         <a class="{% if choice == 4 %}active{% endif %}" href="/update">
                           <i class="fa fa-steam"></i>
                           <span>Update Installs</span>
                       </a>
