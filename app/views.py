@@ -69,31 +69,55 @@ def hdd():
     choice = 2
     form = xForm()
     admin = None
-    output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
+    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    stats = sr.json()
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
+
+    output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
 
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
-        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
+        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
 
     flash("errors")
     return output
 
-
-@app.route('/hdd/seeker', methods=['GET', 'POST'])
-def hddseeker():
+@app.route('/hdd/<srv>', methods=['GET', 'POST'])
+def hddgo(srv):
+    choice = 2
     form = xForm()
     admin = None
-    choice = 2
-    output = render_template('hdd.html',username=g.user,form=form,admin=admin)
+    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    stats = sr.json()
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
+
+    output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
+
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
-        #r = requests.get("http://freebieservers.com:62992/api/SeekUsers?user=testest&pass=testest")
-        #results = r.json()
-        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice)
+        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
+
+    flash("errors")
+    return output
+
+@app.route('/hdd/seeker/go', methods=['GET', 'POST'])
+def hddseeker():
+    form = xForm()
+    admin = None
+    choice = 2
+    output = render_template('hdd.html',form=form)
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        r = requests.get("http://freebieservers.com:62992/api/SeekUsers?user=testest&pass=testest")
+        results = r.json()
+        output = render_template('hdd.html',form=form,page=2)
 
     flash("errors")
     return output
