@@ -1,7 +1,7 @@
 
 from app.models import User
 from flask_openid import OpenID
-import re, requests, time, MySQLdb
+import re, requests, time, MySQLdb, paramiko
 from app import app
 from app import engine
 from app import db_session
@@ -13,6 +13,8 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
+db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+cursor = db.cursor()
 
 def tnow():
     tlist = []
@@ -166,6 +168,39 @@ def update():
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
         output = render_template('update.html',username=g.user,form=form,admin=admin,page=choice)
+
+    flash("errors")
+    return output
+
+
+@app.route('/update/run', methods=['GET', 'POST'])
+def updaterun():
+    choice = 4
+    form = xForm()
+    admin = None
+    output = redirect("/")
+
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+        output = redirect("/")
+    ###build server box list###
+    fetch = "SELECT * FROM servers WHERE ip != '0'"
+    cursor.execute(fetch)
+    list = cursor.fetchall()
+    for table in list:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+        ssh.exec_command("screen -dmS updatecss ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/css +app_update 232330 validate +exit")
+        ssh.exec_command("screen -dmS updatecsgo ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/csgo +app_update 740 validate +exit")
+        ssh.exec_command("screen -dmS updatetf2 ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/tf2 +app_update 232250 validate +exit")
+        ssh.exec_command("screen -dmS updategmod ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/gmod +app_update 4020 validate +exit")
+        ssh.exec_command("screen -dmS updatedods ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/dods +app_update 232290 validate +exit")
+        ssh.exec_command("screen -dmS updatehl2dm ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/hl2dm +app_update 232370 validate +exit")
+        ssh.exec_command("screen -dmS updatel4d2 ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/l4d2 +app_update 222860 validate +exit")
+        ssh.exec_command("screen -dmS updateins ./steamcmd.sh +login anonymous +force_install_dir /home/gcp/installs/ins +app_update 237410 validate +exit")
 
     flash("errors")
     return output
