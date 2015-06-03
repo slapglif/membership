@@ -13,6 +13,7 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
+from cpuload import GetCpuLoad
 
 def tnow():
     tlist = []
@@ -41,6 +42,10 @@ def index():
     stats = sr.json()
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
+    x = GetCpuLoad()
+    data = x.getcpuload()
+    print data
+
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
