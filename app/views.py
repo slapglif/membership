@@ -188,13 +188,14 @@ def hddseeker():
     form = xForm()
     admin = None
     choice = 2
-    output = render_template('hdd.html',form=form)
+    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    sstats = sl.json()
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
-        r = requests.get("http://freebieservers.com:62992/api/SeekUsers?user=testest&pass=testest")
-        results = r.json()
-        output = render_template('hdd.html',form=form,page=2)
+    r = requests.get("http://freebieservers.com:62992/api/SeekUsers?user=testest&pass=testest")
+    results = r.json()
+    output = render_template('hdd.html',form=form,page=2,servers=sstats)
 
     flash("errors")
     return output
