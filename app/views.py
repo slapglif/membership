@@ -309,6 +309,33 @@ def updaterun():
     flash("errors")
     return output
 
+@app.route("/mods")
+def mods():
+    db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+    cursor = db.cursor()
+    fetch = "SELECT * FROM servers WHERE ip != '0'"
+    cursor.execute(fetch)
+    list = cursor.fetchall()
+    for table in list:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+        fetch2 = "SELECT * FROM usergames WHERE id != '0'"
+        fetch3 = "SELECT * FROM game WHERE id != '0'"
+        cursor.execute(fetch2)
+        listu = cursor.fetchall()
+        cursor.execute(fetch3)
+        listg = cursor.fetchall()
+        for x in listu:
+            if str(x[24]) != "garrysmod" and x[24] != "minecraft" and x[24] != "spaceengi" and x[24] != "bukkit" and x[24] != "forge" and x[24] != "KFmod" and x[24] != "modernwarfare" and x[24] != "fof" and x[24] != "unturned" and x[24] != "Rust":
+                for y in listg:
+                    if x[24] == y[2]:
+                        gt = y[6]
+                ssh.exec_command("rm -rf /home/client" + str(x[1]) + "/service" + str(x[0]) + "/" + str(gt) + "/" + str(x[24]) + "/addons/sourcemod/plugins/motdgd_adverts.smx")
+                ssh.exec_command("cp -R /home/gcp/installs/csgo/csgo/addons/sourcemod/plugins/motdgd_adverts.smx /home/client" + str(x[1]) + "/service" + str(x[0]) + "/" + str(gt) + "/" + str(x[24]) + "/addons/sourcemod/plugins/")
+                print("rm -rf /home/client" + str(x[1]) + "/service" + str(x[0]) + "/" + str(gt) + "/" + str(x[24]) + "/addons/sourcemod/plugins/motdgd_adverts.smx")
+                print("cp -R /home/gcp/installs/csgo/csgo/addons/sourcemod/plugins/motdgd_adverts.smx /home/client" + str(x[1]) + "/service" + str(x[0]) + "/" + str(gt) + "/" + str(x[24]) + "/addons/sourcemod/plugins/")
+    return "Executed"
 
 
 def get_steam_userinfo(steam_id):
