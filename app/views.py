@@ -86,7 +86,7 @@ def isz(sz):
 
     if sz == "1":
         for server in sstats:
-            if server['data']['id'] == 2:
+            if server['data']['id'] == 1:
                 sload = server["result"]["used_cpu"]
                 sram = server["result"]["free_ram"]
                 shdd = server["result"]["used_pct"]
