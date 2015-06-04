@@ -178,17 +178,13 @@ def before_request():
 
 @open_id.after_login
 def create_or_login(response):
-    form = xForm()
     match = _steam_id_re.search(response.identity_url)
     g.user = User.get_or_create(match.group(1))
     steamdata = get_steam_userinfo(g.user.steam_id)
     g.user.nickname = steamdata['personaname']
-    g.user.flag = 1
     db_session.commit()
 
     session['user_id'] = g.user.user_id
-    session['admin'] = False
-    session['stuff'] = None
     output = redirect(open_id.get_next_url())
     return output
 
