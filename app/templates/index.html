@@ -1,6 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<script>
+
+
+$( document ).ready(function() {
+
+	$.getJSON('http://freebieservers.com/api/SeekServers?user=testest&pass=testest', function (data) {
+		 //"Object { Json content }"
+
+		var jsonString = JSON.stringify(data);
+		var parsed = JSON.parse(jsonString);
+		console.log(parsed);
+
+	});
+});
+</script>
+
+
+
 	<section id="main-content" xmlns="http://www.w3.org/1999/html">
           <section class="wrapper">
 
@@ -285,6 +303,11 @@
       </section>
 
 
+<Script>
+
+
+
+</Script>
       <!--main content end-->
       <!--footer start-->
 

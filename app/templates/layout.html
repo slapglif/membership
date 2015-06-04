@@ -24,6 +24,10 @@
     <link href="/static/assets/css/style-responsive.css" rel="stylesheet">
 
     <script src="/static/assets/js/chart-master/Chart.js"></script>
+         <script src="http://code.jquery.com/jquery-git2.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+
 
 
     
@@ -35,6 +39,10 @@
   </head>
 
   <body>
+
+
+
+
 
 
     <section id="container" >
@@ -93,6 +101,10 @@
                          <a class="{% if choice == 4 %}active{% endif %}" href="/update">
                           <i class="fa fa-steam"></i>
                           <span>Update Installs</span>
+                      </a>
+                         <a class="{% if choice == 5 %}active{% endif %}" href="/fdl">
+                          <i class="fa fa-download"></i>
+                          <span>Fast Download</span>
                       </a>
                   </li>
 

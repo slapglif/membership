@@ -9,6 +9,7 @@ from flask import url_for, render_template, flash, g, session, \
         redirect
 from flask import request
 from .forms import xForm
+from .forms import fdlform
 from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
@@ -39,10 +40,8 @@ def index():
     choice = 1
     form = xForm()
     admin = None
-    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
-    stats = sr.json()
-    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
-    sstats = sl.json()
+    stats = apireq("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    sstats = apireq("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     xx = 0
     pct_hdd = 0
     pct_ram = 0
@@ -67,6 +66,12 @@ def index():
 
     flash("errors")
     return output
+
+
+def apireq(url):
+    x = requests.get(url).json()
+    return x
+
 
 
 @app.route('/<sz>', methods=['GET', 'POST'])
@@ -309,6 +314,63 @@ def updaterun():
     flash("errors")
     return output
 
+
+
+
+
+@app.route("/fdl")
+def fdl():
+    choice = 5
+    form = fdlform()
+    admin = None
+    output = render_template('fdl.html',username=g.user,form=form,admin=admin,page=choice,ret=None)
+
+
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        #admin = g.user.admin
+        output = render_template('fdl.html',username=g.user,form=form,admin=admin,page=choice,ret=None)
+
+    flash("errors")
+    return output
+
+@app.route("/fdl/go", methods=['GET', 'POST'])
+def fdlgo():
+    form = fdlform()
+    pw = None
+    cid = None
+    output = render_template('fdl.html',form=form,ret=None)
+    if form.clientname.data:
+        if "client" in form.clientname.data:
+            cid = form.clientname.data
+            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+            db2 = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gcp2")
+            cursor = db.cursor()
+            fetch = "SELECT * FROM users WHERE username = '%s'"%cid
+            cursor.execute(fetch)
+            list = cursor.fetchall()
+            for row in list:
+                email = row[2]
+                cursor2 = db2.cursor()
+                fetch2 = "SELECT * FROM fbs_users WHERE email = '%s'"%email
+                cursor2.execute(fetch2)
+                user = cursor2.fetchall()
+                pw = user[0][13]
+
+            ssh('useradd -m -d /home/html/%s-fdl -s /sbin/nologin -U %s-fdl'%(cid,cid))
+            ssh('echo "%s-fdl:%s" | /usr/sbin/chpasswd'%(cid,pw))
+            ssh('mkdir /home/html/%s-fdl'%cid)
+            ssh('chown -R %s-fdl:%s-fdl /home/html/%s-fdl'%(cid,cid,cid))
+            ssh('chmod 777 -R /home/html/%s-fdl'%(cid))
+
+            print('FDL Generated, Username: %s-fdl'%(cid))
+            ret = ["FDL Generated:","Username: %s-fdl\n"%(cid),"Password: %s\n"%pw,"URL: http://kc1.freebieservers.com/%s-fdl/\n"%(cid)]
+            output = render_template('fdl.html',form=form,ret=ret)
+
+
+    return output
+
+
 @app.route("/mods")
 def mods():
     db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
@@ -384,6 +446,19 @@ def create_or_login(response):
     session['user_id'] = g.user.user_id
     output = redirect(open_id.get_next_url())
     return output
+
+
+def ssh(command):
+    db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
+    cursor = db.cursor()
+    fetch = "SELECT * FROM servers WHERE ip != '0'"
+    cursor.execute(fetch)
+    list = cursor.fetchall()
+    for table in list:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+        ssh.exec_command(command)
 
 
 @app.teardown_appcontext
