@@ -37,10 +37,10 @@
                   			<div class="box1">
 
 					  			<span class="fa fa-database"></span>
-					  			<h3><label class="{% if server['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
+					  			<h3><label class="{% if server['results']['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
                   			</div>
                         </a>
-					  			<p>{% if server['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
+					  			<p>{% if server['results']['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
                   		</div>
 						{% endfor %}
                           		<div class="col-md-3 col-sm-3 box0">
