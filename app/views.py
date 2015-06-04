@@ -95,7 +95,7 @@ def apply():
             xy = ins
         if g.user.div == 'Team Fortress 2':
             xy = tf2
-        if g.user.div == 'Gmod':
+        if g.user.div == 'Garrys Mod':
             xy = gmod
         if g.user.div == 'Minecraft':
             xy = mc
