@@ -13,9 +13,12 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 import json
-mylist = []
-today = datetime.date.today()
-mylist.append(today)
+
+def timenow():
+    mylist = []
+    today = datetime.date.today()
+    mylist.append(today)
+    return mylist[0]
 
 def cmd(command):
   return Popen(command, shell=True, stdout=PIPE)
@@ -69,7 +72,7 @@ def apply():
         g.user.voteye = 0
         g.user.voteno = 0
         g.user.voted = "0"
-        now = mylist[0]
+        now = timenow()
         g.user.date = str(now)
 
 
@@ -224,6 +227,10 @@ def ulist():
             userlist3 += [user3]
 
     return userlist3
+
+
+
+
 
 
 

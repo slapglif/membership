@@ -24,7 +24,7 @@ class User(Base):
     voteno = Column(Integer())
     voted = Column(String())
     vflag = Column(Integer())
-    rank = Column(Integer())
+    rank = Column(String())
 
 
 
