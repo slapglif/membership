@@ -35,9 +35,9 @@
 						 <a href="/{{ server['data']['id'] }}">
                   			<div class="box1">
 					  			<span class="fa fa-database"></span>
-					  			<h3><label class="{% if server['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
+					  			<h3><label class="{% if server['result']['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
                   			</div>
-					  			<p>{% if server['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
+					  			<p>{% if server['result']['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
 						 </a>
                   		</div>
 						{% endfor %}
@@ -71,7 +71,7 @@
 								<script>
 									var doughnutData = [
 											{
-												value: {{ load }},
+												value: {{ total_cpu }}{{ load }},
 												color:"#FF6B6B"
 											},
 											{
@@ -82,12 +82,12 @@
 										var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
 								</script>
 
-								<p>April 17, 2014</p>
+
 								<footer>
 									<div class="pull-left">
 									</div>
 									<div class="pull-right">
-										<h5>{{ load }}% Used</h5>
+										<h5>{{ total_cpu }}{{ load }}% Used</h5>
 									</div>
 								</footer>
                       		</div><! -- /darkblue panel -->
@@ -96,13 +96,13 @@
 						<div class="col-md-4 mb">
    							<div class="darkblue-panel pn">
                       			<div class="darkblue-header">
-						  			<h5>SERVER LOAD</h5>
+						  			<h5>RAM LOAD</h5>
                       			</div>
-								<canvas id="serverstatus01" height="120" width="120" style="width: 120px; height: 120px;"></canvas>
+								<canvas id="serverstatus02" height="120" width="120" style="width: 120px; height: 120px;"></canvas>
 								<script>
 									var doughnutData = [
 											{
-												value: {{ ram }},
+												value: {{ total_ram }}{{ ram }},
 												color:"#FF6B6B"
 											},
 											{
@@ -110,15 +110,15 @@
 												color : "#fdfdfd"
 											}
 										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
+										var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
 								</script>
 
-								<p>April 17, 2014</p>
+
 								<footer>
 									<div class="pull-left">
 									</div>
 									<div class="pull-right">
-										<h5>{{ load }}% Used</h5>
+										<h5>{{ total_ram }}{{ ram }}% Used</h5>
 									</div>
 								</footer>
                       		</div><! -- /darkblue panel -->
@@ -129,11 +129,11 @@
                       			<div class="darkblue-header">
 						  			<h5>HDD STATICS</h5>
                       			</div>
-								<canvas id="serverstatus02" height="120" width="120"></canvas>
+								<canvas id="serverstatus03" height="120" width="120"></canvas>
 								<script>
 									var doughnutData = [
 											{
-												value: {{ hdd }},
+												value: {{ total_hdd }}{{ hdd }},
 												color:"#68dff0"
 											},
 											{
@@ -141,15 +141,15 @@
 												color : "#444c57"
 											}
 										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
+										var myDoughnut = new Chart(document.getElementById("serverstatus03").getContext("2d")).Doughnut(doughnutData);
 								</script>
-								<p>April 17, 2014</p>
+
 								<footer>
 									<div class="pull-left">
-										<h5><i class="fa fa-hdd-o"></i> {{ free }} GB Free</h5>
+										<h5><i class="fa fa-hdd-o"></i> {{ free }} Free</h5>
 									</div>
 									<div class="pull-right">
-										<h5>{{ hdd }}Used</h5>
+										<h5>{{ total_hdd }}{{ hdd }}% Used</h5>
 									</div>
 								</footer>
                       		</div><! -- /darkblue panel -->

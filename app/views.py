@@ -1,7 +1,7 @@
 
 from app.models import User
 from flask_openid import OpenID
-import re, requests, time, MySQLdb, paramiko
+import re, requests, time, MySQLdb, random, paramiko
 from app import app
 from app import engine
 from app import db_session
@@ -43,12 +43,27 @@ def index():
     stats = sr.json()
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
+    xx = 0
+    pct_hdd = 0
+    pct_ram = 0
+    pct_cpu = 0
+    for x in sstats:
+         pct_hdd += float(x["result"]["used_pct"])
+         pct_ram += float(x["result"]["free_ram"])
+         pct_cpu += float(x["result"]["used_cpu"])
+
+         xx += 1
+
+    total_hddpct = pct_hdd / xx
+    total_rampct = pct_ram / xx
+    total_cpupct = pct_cpu / xx
+
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
 
-    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'])
+    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'],total_cpu=total_cpupct,total_hdd=total_hddpct,total_ram=total_rampct)
 
     flash("errors")
     return output
@@ -64,109 +79,45 @@ def isz(sz):
     stats = sr.json()
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
-
     sload = None
     sram = None
     shdd = None
     shddf = None
 
-    if sz:
-        if sz == "1":
-            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
-            cursor = db.cursor()
-
-            ###build server box list###
-            fetch = "SELECT * FROM servers WHERE id = '13'"
-            cursor.execute(fetch)
-            list = cursor.fetchall()
-            for table in list:
-                ssh = paramiko.SSHClient()
-                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
-                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
-                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
-                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
-                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
-
-                stdin1,stdout1,stderr1 = ssh.exec_command(x)
-                stdin2,stdout2,stderr2 = ssh.exec_command(y)
-                stdin3,stdout3,stderr3 = ssh.exec_command(z)
-                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
-                sload = stdout1.readlines()
-                sram = stdout2.readlines()
-                shdd = stdout3.readlines()
-                shddf = stdout4.readlines()
-                ssh.close()
-            db.close()
+    if sz == "1":
+        for server in sstats:
+            if server['data']['id'] == 2:
+                sload = server["result"]["used_cpu"]
+                sram = server["result"]["free_ram"]
+                shdd = server["result"]["used_pct"]
+                shddf = server["result"]["free_space"]
 
     if sz:
         if sz == "2":
-            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
-            cursor = db.cursor()
-            ###build server box list###
-            fetch = "SELECT * FROM servers WHERE id = '14'"
-            cursor.execute(fetch)
-            list = cursor.fetchall()
-            for table in list:
-                ssh = paramiko.SSHClient()
-                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
-                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
-                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
-                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
-                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
-
-                stdin1,stdout1,stderr1 = ssh.exec_command(x)
-                stdin2,stdout2,stderr2 = ssh.exec_command(y)
-                stdin3,stdout3,stderr3 = ssh.exec_command(z)
-                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
-                sload = stdout1.readlines()
-                sram = stdout2.readlines()
-                shdd = stdout3.readlines()
-                shddf = stdout4.readlines()
-                ssh.close()
-            db.close()
+            for server in sstats:
+                if server['data']['id'] == 2:
+                    sload = server["result"]["used_cpu"]
+                    sram = server["result"]["free_ram"]
+                    shdd = server["result"]["used_pct"]
+                    shddf = server["result"]["free_space"]
     if sz:
         if sz == "4":
-            ###build server box list###
-            db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gamecp")
-            cursor = db.cursor()
-            fetch = "SELECT * FROM servers WHERE id = '16'"
-            cursor.execute(fetch)
-            list = cursor.fetchall()
-            for table in list:
-                ssh = paramiko.SSHClient()
-                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
-                x = """top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$prefix" '{ split($1, vs, ","); v=vs[length(vs)]; sub("%", "", v); printf "%s%.1f%%", prefix, 100 - v }'"""
-                y = "free | awk 'FNR == 3 {print $3/($3+$4)*100}'"
-                z = """df -hl | awk '{print $5}' | head -n 3 | grep "[0-9]" """
-                xx = """df -hl | awk '{print $4}' | head -n 3 | grep "[0-9]" """
+            for server in sstats:
 
-                stdin1,stdout1,stderr1 = ssh.exec_command(x)
-                stdin2,stdout2,stderr2 = ssh.exec_command(y)
-                stdin3,stdout3,stderr3 = ssh.exec_command(z)
-                stdin4,stdout4,stderr4 = ssh.exec_command(xx)
-                sload = stdout1.readlines()
-                sram = stdout2.readlines()
-                shdd = stdout3.readlines()
-                shddf = stdout4.readlines()
-                ssh.close()
-            db.close()
+                if int(server['data']['id']) == 4:
+                    sload = server["result"]["used_cpu"]
+                    sram = server["result"]["free_ram"]
+                    shdd = server["result"]["used_pct"]
+                    shddf = server["result"]["free_space"]
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         #admin = g.user.admin
-    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'],load=sload[0].strip('%'),ram=sram[0],hdd=shdd,free=shddf)
+    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,total=stats['purchases_usd'],load=sload,ram=sram,hdd=shdd,free=shddf)
 
     flash("errors")
     return output
 
-@app.context_processor
-def page_proc():
-    def change_page(page):
-        return page
-    return dict(change_page=change_page)
 
 
 
@@ -200,9 +151,20 @@ def hddgo(srv):
     stats = sr.json()
     sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
     sstats = sl.json()
+    if srv == "1":
+        r = requests.get('http://freebieservers.com/api/SeekChangeDefault?user=testest&pass=testest&idserv=1')
+        print r
+    if srv == "2":
+        r = requests.get('http://freebieservers.com/api/SeekChangeDefault?user=testest&pass=testest&idserv=2')
+        print r
+    if srv == "4":
+        r = requests.get('http://freebieservers.com/api/SeekChangeDefault?user=testest&pass=testest&idserv=4')
+        print r
+    if srv == "3":
+        r = requests.get('http://freebieservers.com/api/SeekChangeDefault?user=testest&pass=testest&idserv=%s'%randomize())
+        print r
 
     output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
-
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
@@ -211,6 +173,15 @@ def hddgo(srv):
 
     flash("errors")
     return output
+
+def randomize():
+    x = random.randint(0,4)
+    if x == 3:
+        randomize()
+    else:
+        return x
+
+
 
 @app.route('/hdd/seeker/go', methods=['GET', 'POST'])
 def hddseeker():
