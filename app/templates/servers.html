@@ -1,0 +1,35 @@
+<div class="col-md-2 col-sm-2 box0" style="">
+    <a href="javascript:selectServer( {{ server['data']['id'] }} )">
+        <div class="box1">
+            <span class="fa fa-database"></span>
+
+            <h3><label
+                    class="
+
+                            {% if server %}{% if server['result']['online'] == True %}label label-success{% else %}label label-danger{% endif %}"
+                                >{{ server['data']['name'] }}{% endif %}</label>
+            </h3>
+        </div>
+        <p>{% if server %}{% if server['result']['online'] == True %}Server Online{% else %}Can not reach
+            FBShellhost.exe{% endif %}{% endif %}</p>
+    </a>
+</div>
+
+
+{#						<div class="col-md-2 col-sm-2 box0">#}
+{#                  			<div class="box1">#}
+{#					  			<span class="fa fa-database"></span>#}
+{#					  			<h3><label class="label label-danger">KC2</label></h3>#}
+{#                  			</div>#}
+{#					  			<p>Can not reach FBShellHost.exe</p>#}
+{#                  		</div>#}
+{#						<div class="col-md-2 col-sm-2 box0">#}
+{#                  			<div class="box1">#}
+{#					  			<span class="fa fa-database"></span>#}
+{#					  			<h3><label class="label label-success">NY1</label></h3>#}
+{#                  			</div>#}
+{#					  			<p>Server Online</p>#}
+{#                  		</div>#}
+
+
+</div><!-- /row mt -->

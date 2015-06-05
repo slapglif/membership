@@ -1,0 +1,39 @@
+<div class="col-md-8">
+    <!-- REVENUE PANEL -->
+    <div class="darkblue-panel pn">
+        <div class="darkblue-header">
+            <h5>Growth</h5>
+        </div>
+        <div class="chart mt">
+            <div class="sparkline" data-type="line" data-resize="true" data-height="75"
+                 data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff"
+                 data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4"
+                 data-data="{{ growth }}"></div>
+        </div>
+        <p class="mt"><b> 15867 Total Users</b><br/></p>
+    </div>
+
+</div>
+
+<div class="col-md-4 col-sm-4 mb">
+    <!-- REVENUE PANEL -->
+    <div class="darkblue-panel pn">
+        <div class="darkblue-header">
+            <h5>REVENUE</h5>
+        </div>
+        <div class="chart mt">
+            <div class="sparkline" data-type="line" data-resize="true" data-height="75"
+                 data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff"
+                 data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4"
+                 data-data="{{ revenue }}">
+                <canvas style="display: inline-block; width: 347px; height: 75px; vertical-align: top;"
+                        width="347" height="75"></canvas>
+            </div>
+        </div>
+        <p class="mt"><b>$ {{ total }}</b><br>2 Week Income</p>
+    </div>
+</div>
+
+<script>
+    sparklinify(); // in layout
+</script>

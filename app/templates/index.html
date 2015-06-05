@@ -1,316 +1,275 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<script>
 
 
-$( document ).ready(function() {
+    <section id="main-content" xmlns="http://www.w3.org/1999/html">
+        <section class="wrapper">
 
-	$.getJSON('http://freebieservers.com/api/SeekServers?user=testest&pass=testest', function (data) {
-		 //"Object { Json content }"
-
-		var jsonString = JSON.stringify(data);
-		var parsed = JSON.parse(jsonString);
-		console.log(parsed);
-
-	});
-});
-</script>
+            <div class="row">
+                <div class="col-lg-10 main-chart">
 
 
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2 box0">
+                            <div class="box1">
+                                <span class="fa fa-users"></span>
 
-	<section id="main-content" xmlns="http://www.w3.org/1999/html">
-          <section class="wrapper">
+                                <h3>+{{ utoday }}</h3>
 
-              <div class="row">
-                  <div class="col-lg-10 main-chart">
-
-
-                  	<div class="row">
-                  		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
-					  			<span class="fa fa-users"></span>
-
-					  			<h3>+{{ utoday }}</h3>
-
-                  			</div>
+                            </div>
                             <p> New users today.</p>
 
-                  		</div>
+                        </div>
 
-              		<div class="col-md-2 col-sm-2 box0">
-                  			<div class="box1">
-					  			<span class="fa fa-money"></span>
+                        <div class="col-md-2 col-sm-2 box0">
+                            <div class="box1">
+                                <span class="fa fa-money"></span>
 
-					  			<h3>+{{ ptoday }}</h3>
+                                <h3>+{{ ptoday }}</h3>
 
-                  			</div>
+                            </div>
                             <p> Purchaes today.</p>
 
-                  		</div>
-                        {% for server in servers %}
-                  		<div class="col-md-2 col-sm-2 box0" style="">
-						 <a href="/{{ server['data']['id'] }}">
-                  			<div class="box1">
-					  			<span class="fa fa-database"></span>
-					  			<h3><label class="{% if server['result']['online'] == True %}label label-success{% else %}label label-danger{% endif %}">{{ server['data']['name'] }}</label></h3>
-                  			</div>
-					  			<p>{% if server['result']['online'] == True %}Server Online{% else %}Can not reach FBShellhost.exe{% endif %}</p>
-						 </a>
-                  		</div>
-						{% endfor %}
-{#						<div class="col-md-2 col-sm-2 box0">#}
-{#                  			<div class="box1">#}
-{#					  			<span class="fa fa-database"></span>#}
-{#					  			<h3><label class="label label-danger">KC2</label></h3>#}
-{#                  			</div>#}
-{#					  			<p>Can not reach FBShellHost.exe</p>#}
-{#                  		</div>#}
-{#						<div class="col-md-2 col-sm-2 box0">#}
-{#                  			<div class="box1">#}
-{#					  			<span class="fa fa-database"></span>#}
-{#					  			<h3><label class="label label-success">NY1</label></h3>#}
-{#                  			</div>#}
-{#					  			<p>Server Online</p>#}
-{#                  		</div>#}
+                        </div>
+
+                        <div id="server-container">
+                            <script>
+                                function selectServer(id, initial)
+                                {
+                                    var json = $("#server-container").data("json_data");
+
+                                    for (var i = 0; i < json.length; i++)
+                                    {
+                                        var server = json[i];
+                                        if (server.data.id == id)
+                                        {
+                                            var doughnutData1 = [{value: parseInt(server.result.used_cpu), color: "#FF6B6B"}, {value: 100,  color: "#fdfdfd"}];
+                                            var doughnutData2 = [{value: parseInt(server.result.free_ram), color: "#FF6B6B"}, {value: 100,  color: "#fdfdfd"}];
+                                            var doughnutData3 = [{value: parseInt(server.result.used_pct), color: "#FF6B6B"}, {value: 100,  color: "#fdfdfd"}];
+
+                                            new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData1); // cpu
+                                            new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData2); // ram
+                                            new Chart(document.getElementById("serverstatus03").getContext("2d")).Doughnut(doughnutData3); // hdd
+
+                                            if (!initial) {
+                                                $(".pctcpu").html(server.result.used_cpu);
+                                                $('.pctram').html(server.result.free_ram);
+                                                $(".pcthdd").html(server.result.used_pct);
+                                                $(".freespace").html(server.result.free_space);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                $.getJSON("http://freebieservers.com/api/SeekServers?user=testest&pass=testest", function (servers) {
+
+                                    $("#server-container").data("json_data", servers);
+
+                                    for (var i = 0; i < servers.length; i++) {
+                                        $.get("/servers?json=" + encodeURIComponent(JSON.stringify(servers[i])), function (html) {
+                                            $("#server-container").append(html);
+                                        });
+                                    }
+
+                                    $.get("/graphs?json=" + encodeURIComponent(JSON.stringify(servers)), function (html) {
+                                        $("#stats-container").append(html);
+                                    });
+
+                                    selectServer(servers[0].data.id, true);
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <!-- /row mt -->
 
 
-                  	</div><!-- /row mt -->
+                    <!-- Grahps PANEL -->
+                    <div id="stats-container">
+
+                        <div class="col-md-4 mb">
+                            <div class="darkblue-panel pn">
+                                <div class="darkblue-header">
+                                    <h5>SERVER LOAD</h5>
+                                </div>
+                                <canvas id="serverstatus01" height="120" width="120"
+                                        style="width: 120px; height: 120px;"></canvas>
+                                <footer>
+                                    <div class="pull-left">
+                                    </div>
+                                    <div class="pull-right">
+                                        <h5><span class="pctcpu">{{ total_cpu }}</span>%  Used</h5>
+                                    </div>
+                                </footer>
+                            </div>
+                            <! -- /darkblue panel -->
+                        </div>
+
+                        <div class="col-md-4 mb">
+                            <div class="darkblue-panel pn">
+                                <div class="darkblue-header">
+                                    <h5>RAM LOAD</h5>
+                                </div>
+                                <canvas id="serverstatus02" height="120" width="120"></canvas>
+                                <footer>
+                                    <div class="pull-left">
+                                    </div>
+                                    <div class="pull-right">
+                                        <h5> <span class="pctram">{{ total_ram }}</span>%  Used</h5>
+                                    </div>
+                                </footer>
+                            </div>
+                            <! -- /darkblue panel -->
+                        </div>
+
+                        <div class="col-md-4 mb">
+                            <div class="darkblue-panel pn">
+                                <div class="darkblue-header">
+                                    <h5>HDD STATICS</h5>
+                                </div>
+                                <canvas id="serverstatus03" height="120" width="120"></canvas>
+
+                                <footer>
+                                    <div class="pull-left">
+                                        <h5><i class="fa fa-hdd-o"></i> <span class="freespace"></span> Free</h5>
+                                    </div>
+                                    <div class="pull-right">
+                                        <h5><span class="pcthdd">{{ total_hdd }}</span>% Used</h5>
+                                    </div>
+                                </footer>
+                            </div>
+                            <! -- /darkblue panel -->
+                        </div>
+
+                    </div>
 
 
-
-						<!-- TWITTER PANEL -->
-						<div class="col-md-4 mb">
-   							<div class="darkblue-panel pn">
-                      			<div class="darkblue-header">
-						  			<h5>SERVER LOAD</h5>
-                      			</div>
-								<canvas id="serverstatus01" height="120" width="120" style="width: 120px; height: 120px;"></canvas>
-								<script>
-									var doughnutData = [
-											{
-												value: {{ total_cpu }}{{ load }},
-												color:"#FF6B6B"
-											},
-											{
-												value : 100,
-												color : "#fdfdfd"
-											}
-										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
-								</script>
+                    <!-- **********************************************************************************************************************************************************
+                          RIGHT SIDEBAR CONTENT
+                          *********************************************************************************************************************************************************** -->
 
 
-								<footer>
-									<div class="pull-left">
-									</div>
-									<div class="pull-right">
-										<h5>{{ total_cpu }}{{ load }}% Used</h5>
-									</div>
-								</footer>
-                      		</div><! -- /darkblue panel -->
-	                      	</div>
-
-						<div class="col-md-4 mb">
-   							<div class="darkblue-panel pn">
-                      			<div class="darkblue-header">
-						  			<h5>RAM LOAD</h5>
-                      			</div>
-								<canvas id="serverstatus02" height="120" width="120" style="width: 120px; height: 120px;"></canvas>
-								<script>
-									var doughnutData = [
-											{
-												value: {{ total_ram }}{{ ram }},
-												color:"#FF6B6B"
-											},
-											{
-												value : 100,
-												color : "#fdfdfd"
-											}
-										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
-								</script>
-
-
-								<footer>
-									<div class="pull-left">
-									</div>
-									<div class="pull-right">
-										<h5>{{ total_ram }}{{ ram }}% Used</h5>
-									</div>
-								</footer>
-                      		</div><! -- /darkblue panel -->
-	                      	</div>
-						<!-- TWITTER PANEL -->
-						<div class="col-md-4 mb">
-                      		<div class="darkblue-panel pn">
-                      			<div class="darkblue-header">
-						  			<h5>HDD STATICS</h5>
-                      			</div>
-								<canvas id="serverstatus03" height="120" width="120"></canvas>
-								<script>
-									var doughnutData = [
-											{
-												value: {{ total_hdd }}{{ hdd }},
-												color:"#68dff0"
-											},
-											{
-												value : 100,
-												color : "#444c57"
-											}
-										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus03").getContext("2d")).Doughnut(doughnutData);
-								</script>
-
-								<footer>
-									<div class="pull-left">
-										<h5><i class="fa fa-hdd-o"></i> {{ free }} Free</h5>
-									</div>
-									<div class="pull-right">
-										<h5>{{ total_hdd }}{{ hdd }}% Used</h5>
-									</div>
-								</footer>
-                      		</div><! -- /darkblue panel -->
-						</div><!-- /col-md-4 -->
-
-
-						<div class="col-md-8" >
-							<!-- REVENUE PANEL -->
-							<div class="darkblue-panel pn">
-								<div class="darkblue-header">
-									<h5>Growth</h5>
-								</div>
-								<div class="chart mt">
-									<div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="{{ growth }}"></div>
-								</div>
-								<p class="mt"><b> 15867 Total Users</b><br/></p>
-							</div>
-
-						</div><!-- /col-md-4 -->
-<div class="col-md-4 col-sm-4 mb">
-							<!-- REVENUE PANEL -->
-							<div class="darkblue-panel pn">
-								<div class="darkblue-header">
-									<h5>REVENUE</h5>
-								</div>
-								<div class="chart mt">
-									<div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="{{ revenue }}"><canvas style="display: inline-block; width: 347px; height: 75px; vertical-align: top;" width="347" height="75"></canvas></div>
-								</div>
-								<p class="mt"><b>$ {{ total }}</b><br>2 Week Income</p>
-							</div>
-						</div>
-
-
-<!-- **********************************************************************************************************************************************************
-      RIGHT SIDEBAR CONTENT
-      *********************************************************************************************************************************************************** -->
-
-
-              </div>
-				  <div class="col-lg-2">
+                </div>
+                <div class="col-lg-2">
                     <!--COMPLETED ACTIONS DONUTS CHART-->
-						<h3>Twitter & Slack</h3>
+                    <h3>Twitter & Slack</h3>
 
-                      <!-- First Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>2 Minutes Ago</muted><br/>
-                      		   <a href="#">James Brown</a> subscribed to your newsletter.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <!-- Second Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>3 Hours Ago</muted><br/>
-                      		   <a href="#">Diana Kennedy</a> purchased a year subscription.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <!-- Third Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>7 Hours Ago</muted><br/>
-                      		   <a href="#">Brandon Page</a> purchased a year subscription.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <!-- Fourth Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>11 Hours Ago</muted><br/>
-                      		   <a href="#">Mark Twain</a> commented your post.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <!-- Fifth Action -->
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>18 Hours Ago</muted><br/>
-                      		   <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>18 Hours Ago</muted><br/>
-                      		   <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>18 Hours Ago</muted><br/>
-                      		   <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
-                      		</p>
-                      	</div>
-                      </div>
-                      <div class="desc">
-                      	<div class="thumb">
-                      		<span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                      	</div>
-                      	<div class="details">
-                      		<p><muted>18 Hours Ago</muted><br/>
-                      		   <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
-                      		</p>
-                      	</div>
-                      </div>
+                    <!-- First Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>2 Minutes Ago</muted>
+                                <br/>
+                                <a href="#">James Brown</a> subscribed to your newsletter.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Second Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>3 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Diana Kennedy</a> purchased a year subscription.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Third Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>7 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Brandon Page</a> purchased a year subscription.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Fourth Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>11 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Mark Twain</a> commented your post.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Fifth Action -->
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>18 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>18 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>18 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <div class="details">
+                            <p>
+                                <muted>18 Hours Ago</muted>
+                                <br/>
+                                <a href="#">Daniel Pratt</a> purchased a wallet in your store.<br/>
+                            </p>
+                        </div>
+                    </div>
 
-                  </div><!-- /col-lg-3 -->
-				  <! --/row -->
-          </section>
-      </section>
+                </div>
+                <!-- /col-lg-3 -->
+                <! --/row -->
+        </section>
+    </section>
 
 
-<Script>
+    <Script>
 
 
+    </Script>
+    <!--main content end-->
+    <!--footer start-->
 
-</Script>
-      <!--main content end-->
-      <!--footer start-->
-
-      <!--footer end-->
- {% endblock %}
+    <!--footer end-->
+{% endblock %}
 

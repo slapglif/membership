@@ -14,6 +14,7 @@ from mandril import drill
 from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
+import json, ast
 
 def tnow():
     tlist = []
@@ -31,39 +32,149 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 
 
 
+@app.route('/servers', methods=['GET'])
+def servers():
+    sstats = json.loads(request.args.get('json'))
+
+    output = render_template('servers.html',
+                             server=sstats)
+    return output
 
 
-@app.route('/', methods=['GET', 'POST'])
-
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    choice = 1
-    form = xForm()
-    admin = None
+@app.route('/graphs', methods=['GET'])
+def graphs():
+    # print "hello"
+    sstats = json.loads(request.args.get('json'))
     stats = apireq("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
-    sstats = apireq("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
-    xx = 0
+    #print test
+
     pct_hdd = 0
     pct_ram = 0
     pct_cpu = 0
+    xx = 0
     for x in sstats:
-         pct_hdd += float(x["result"]["used_pct"])
-         pct_ram += float(x["result"]["free_ram"])
-         pct_cpu += float(x["result"]["used_cpu"])
+        print x
+        pct_hdd += float(x["result"]["used_pct"])
+        pct_ram += float(x["result"]["free_ram"])
+        pct_cpu += float(x["result"]["used_cpu"])
 
-         xx += 1
+        xx += 1
 
     total_hddpct = pct_hdd / xx
     total_rampct = pct_ram / xx
     total_cpupct = pct_cpu / xx
 
 
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-        #admin = g.user.admin
+    output = render_template('graphs.html',
+                             growth=stats['user_data'],
+                             utoday=stats['users_today'],
+                             ptoday=stats['purchases_today'],
+                             server=sstats,
+                             revenue=stats['payments_data'],
+                             total=stats['purchases_usd'],
+                             total_cpu=total_cpupct,
+                             total_hdd=total_hddpct,
+                             total_ram=total_rampct)
+    return output
 
-    output = render_template('index.html',form=form,growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],servers=sstats,revenue=stats['payments_data'],total=stats['purchases_usd'],total_cpu=total_cpupct,total_hdd=total_hddpct,total_ram=total_rampct)
 
+
+
+@app.route("/api/ServStats")
+def servstats():
+    db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gcp2")
+    cursor = db.cursor()
+    fetch = "SELECT * FROM fbs_servers WHERE windows = '0'"
+    cursor.execute(fetch)
+    list = cursor.fetchall()
+
+    list_res = []
+    for row in list:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(row[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
+        x = True
+        if x == (False): # the ip check
+            cmd1 = "df -hl | grep \"/home$\""
+        else:
+            cmd1 = "df -hl | grep \"/$\"" # just let it  always pull this one for now, my mic is muted atm but i can hear u
+
+        stdin,stdout,stderr = ssh.exec_command(cmd1)
+
+        data0 = str(stdout.readlines()).split(' ')
+        while '' in data0:
+            data0.remove('')
+
+        if re.match("^[A-Za-z0-9/]*$", data0[0]):
+            data0.remove(data0[0])
+
+        spaceFree = data0[len(data0)-3] # continue...
+        usedPct = data0[len(data0)-2]
+        stdin2,stdout2,stderr2 = ssh.exec_command("free | awk 'FNR == 3 {print $3/($3+$4)*100}'")
+
+        freeRam = stdout2.readlines()
+        stdin3,stdout3,stderr3 = ssh.exec_command("top -d 0.5 -b -n2 -p 1 | fgrep \"Cpu(s)\" | tail -1 | awk -F'id,' -v prefix=\"$prefix\" '{ split($1, vs, \",\"); v=vs[length(vs)]; sub(\"%\", \"\", v); printf \"%s%.1f%%\", prefix, 100 - v }'")
+
+        cpu = stdout3.readlines()
+
+        free_space = spaceFree,
+        used_pct = str(usedPct).strip('%')
+        free_ram = str(freeRam).strip('\n')
+        used_cpu = str(cpu).strip('%')
+
+        list_res.append({
+            # we can just omit data and error for now i think
+            'data':
+            {
+                "id": row[0],
+                "name": row[1],
+                "ipaddress": row[2],
+                "flags": row[3],
+                "windows": row[4],
+                "is_default": row[5]
+            },
+            'result':
+             {
+                'online': True,
+                'free_space': free_space,
+                "used_pct": used_pct,
+                "free_ram": ast.literal_eval(str(free_ram).replace('\\n', "")),
+                "used_cpu": ast.literal_eval(used_cpu)
+            }
+        })
+
+    return json.dumps(list_res)
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    # choice = 1
+    # form = xForm()
+    # admin = None
+    stats = apireq("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    #sstats = apireq("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    # xx = 0
+    # pct_hdd = 0
+    # pct_ram = 0
+    # pct_cpu = 0
+    # for x in sstats:
+    #      pct_hdd += float(x["result"]["used_pct"])
+    #      pct_ram += float(x["result"]["free_ram"])
+    #      pct_cpu += float(x["result"]["used_cpu"])
+    #
+    #      xx += 1
+    #
+    # total_hddpct = pct_hdd / xx
+    # total_rampct = pct_ram / xx
+    # total_cpupct = pct_cpu / xx
+
+
+    # if 'user_id' in session:
+    #     g.user = User.query.get(session['user_id'])
+    #     #admin = g.user.admin
+
+    output = render_template('index.html',growth=stats['user_data'],utoday=stats['users_today'],ptoday=stats['purchases_today'],revenue=stats['payments_data'],total=stats['purchases_usd'])
     flash("errors")
     return output
 
@@ -131,18 +242,13 @@ def hdd():
     choice = 2
     form = xForm()
     admin = None
-    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
-    stats = sr.json()
-    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
-    sstats = sl.json()
+    #sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    #stats = sr.json()
+    #sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    #sstats = sl.json()
 
-    output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
+    output = render_template('hdd.html')
 
-
-    if 'user_id' in session:
-        g.user = User.query.get(session['user_id'])
-        #admin = g.user.admin
-        output = render_template('hdd.html',username=g.user,form=form,admin=admin,page=choice,servers=sstats)
 
     flash("errors")
     return output
