@@ -165,8 +165,8 @@ def servstats():
         cpu = stdout3.readlines()
         ssh.close()
 
-        free_space = spaceFree[0]
-        used_pct = usedPct[0].strip('%')
+        free_space = spaceFree
+        used_pct = usedPct.strip('%')
         free_ram = freeRam[0].strip('\n')
         used_cpu = cpu[0].strip('%')
 
