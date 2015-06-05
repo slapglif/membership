@@ -15,6 +15,53 @@ from subprocess import (PIPE, Popen)
 import datetime
 from mandril import drill
 import json, ast
+from datetime import timedelta
+from flask import make_response, request, current_app
+from functools import update_wrapper
+
+
+def crossdomain(origin=None, methods=None, headers=None,
+                max_age=21600, attach_to_all=True,
+                automatic_options=True):
+    if methods is not None:
+        methods = ', '.join(sorted(x.upper() for x in methods))
+    if headers is not None and not isinstance(headers, basestring):
+        headers = ', '.join(x.upper() for x in headers)
+    if not isinstance(origin, basestring):
+        origin = ', '.join(origin)
+    if isinstance(max_age, timedelta):
+        max_age = max_age.total_seconds()
+
+    def get_methods():
+        if methods is not None:
+            return methods
+
+        options_resp = current_app.make_default_options_response()
+        return options_resp.headers['allow']
+
+    def decorator(f):
+        def wrapped_function(*args, **kwargs):
+            if automatic_options and request.method == 'OPTIONS':
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
+            if not attach_to_all and request.method != 'OPTIONS':
+                return resp
+
+            h = resp.headers
+
+            h['Access-Control-Allow-Origin'] = origin
+            h['Access-Control-Allow-Methods'] = get_methods()
+            h['Access-Control-Max-Age'] = str(max_age)
+            if headers is not None:
+                h['Access-Control-Allow-Headers'] = headers
+            return resp
+
+        f.provide_automatic_options = False
+        return update_wrapper(wrapped_function, f)
+    return decorator
+
+
 
 def tnow():
     tlist = []
@@ -81,6 +128,7 @@ def graphs():
 
 
 @app.route("/api/ServStats")
+@crossdomain(origin='*')
 def servstats():
     db = MySQLdb.connect("db.freebieservers.com","root","Fuc5M4n15!","gcp2")
     cursor = db.cursor()
@@ -113,8 +161,8 @@ def servstats():
         stdin2,stdout2,stderr2 = ssh.exec_command("free | awk 'FNR == 3 {print $3/($3+$4)*100}'")
 
         freeRam = stdout2.readlines()
-        stdin3,stdout3,stderr3 = ssh.exec_command("top -d 0.5 -b -n2 -p 1 | fgrep \"Cpu(s)\" | tail -1 | awk -F'id,' -v prefix=\"$prefix\" '{ split($1, vs, \",\"); v=vs[length(vs)]; sub(\"%\", \"\", v); printf \"%s%.1f%%\", prefix, 100 - v }'")
-
+        stdin3,stdout3,stderr3 = ssh.exec_command("top -d 0.1 -b -n2 -p 1 | fgrep \"Cpu(s)\" | tail -1 | awk -F'id,' -v prefix=\"$prefix\" '{ split($1, vs, \",\"); v=vs[length(vs)]; sub(\"%\", \"\", v); printf \"%s%.1f%%\", prefix, 100 - v }'")
+        ssh.close()
         cpu = stdout3.readlines()
 
         free_space = spaceFree,
@@ -242,9 +290,7 @@ def hdd():
     choice = 2
     form = xForm()
     admin = None
-    #sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
-    #stats = sr.json()
-    #sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    #sl = requests.get("http://127.0.0.1:5000/api/ServStats")
     #sstats = sl.json()
 
     output = render_template('hdd.html')
