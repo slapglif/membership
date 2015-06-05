@@ -39,6 +39,10 @@
                                 {
                                     var json = $("#server-container").data("json_data");
 
+                                    var avgcpu = 0;
+                                    var avgram = 0;
+                                    var avghdd = 0;
+
                                     for (var i = 0; i < json.length; i++)
                                     {
                                         var server = json[i];
@@ -58,7 +62,22 @@
                                                 $(".pcthdd").html(server.result.used_pct);
                                                 $(".freespace").html(server.result.free_space);
                                             }
+
+                                            avgcpu += server.result.used_cpu;
+                                            avgram += server.result.free_ram;
+                                            avghdd += server.result.used_pct;
                                         }
+                                    }
+
+                                    avgcpu /= json.length;
+                                    avgram /= json.length;
+                                    avghdd /= json.length;
+
+                                    if (initial)
+                                    {
+                                                $(".pctcpu").html(avgcpu);
+                                                $('.pctram').html(avgram);
+                                                $(".pcthdd").html(avghdd);
                                     }
                                 }
 

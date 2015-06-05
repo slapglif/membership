@@ -23,8 +23,8 @@
     <link href="/static/assets/css/style.css" rel="stylesheet">
     <link href="/static/assets/css/style-responsive.css" rel="stylesheet">
 
+    <script src="/static/assets/js/jquery-1.8.3.min.js"></script>
     <script src="/static/assets/js/chart-master/Chart.js"></script>
-         <script src="http://code.jquery.com/jquery-git2.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 
 
@@ -189,8 +189,8 @@
               	  <p class="centered"><img src="/static/assets/img/2599576865-1.jpg" class="img-circle" width="60"></a></p>
               	  <h5 class="centered">{{ nickname }}</h5>
 
-                  <li class="mt">
-                      <a class="active" href="/">
+                  <li class="mt" id="nav-menu">
+                      <a href="/">
                           <i class="fa fa-dashboard"></i>
                           <span>Dashboard</span>
                       </a>
@@ -211,9 +211,25 @@
                           <span>Fast Download</span>
                       </a>
                   </li>
-
-
               </ul>
+
+              <script>
+                  // for ajax
+                  console.log($.fn.jquery);
+
+                  $("#nav-menu a").click(function () {
+                      $(this).siblings().removeClass("active");
+                      $(this).addClass("active");
+                  });
+
+                  // non ajax
+                  var objs = $("#nav-menu a");
+                  for (var i = 0; i < objs.length; i++)
+                  {
+                      if (window.location.pathname == $(objs[i]).attr('href'))
+                          $(objs[i]).addClass("active");
+                  }
+              </script>
               <!-- sidebar menu end-->
           </div>
       </aside>
@@ -233,8 +249,6 @@
 
 
     <!-- js placed at the end of the document so the pages load faster -->
-    <script src="/static/assets/js/jquery.js"></script>
-    <script src="/static/assets/js/jquery-1.8.3.min.js"></script>
     <script src="/static/assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="/static/assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="/static/assets/js/jquery.scrollTo.min.js"></script>

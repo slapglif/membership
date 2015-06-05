@@ -363,12 +363,12 @@ def email():
     form = xForm()
     admin = None
 
-    sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
-    stats = sr.json()
-    sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
-    sstats = sl.json()
+    #sr = requests.get("http://freebieservers.com/api/SeekStats?user=testest&pass=testest")
+    #stats = sr.json()
+    #sl = requests.get("http://freebieservers.com/api/SeekServers?user=testest&pass=testest")
+    #sstats = sl.json()
 
-    output = render_template('email.html',form=form,servers=sstats,emailsent=False,sselect=None,page=choice)
+    output = render_template('email.html',emailsent=False,form=form)
 
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
