@@ -162,13 +162,13 @@ def servstats():
 
         freeRam = stdout2.readlines()
         stdin3,stdout3,stderr3 = ssh.exec_command("top -d 0.1 -b -n2 -p 1 | fgrep \"Cpu(s)\" | tail -1 | awk -F'id,' -v prefix=\"$prefix\" '{ split($1, vs, \",\"); v=vs[length(vs)]; sub(\"%\", \"\", v); printf \"%s%.1f%%\", prefix, 100 - v }'")
-        ssh.close()
         cpu = stdout3.readlines()
+        ssh.close()
 
-        free_space = spaceFree,
-        used_pct = str(usedPct).strip('%')
-        free_ram = str(freeRam).strip('\n')
-        used_cpu = str(cpu).strip('%')
+        free_space = spaceFree[0]
+        used_pct = usedPct[0].strip('%')
+        free_ram = freeRam[0].strip('\n')
+        used_cpu = cpu[0].strip('%')
 
         list_res.append({
             # we can just omit data and error for now i think
@@ -186,8 +186,8 @@ def servstats():
                 'online': True,
                 'free_space': free_space,
                 "used_pct": used_pct,
-                "free_ram": ast.literal_eval(str(free_ram).replace('\\n', "")),
-                "used_cpu": ast.literal_eval(used_cpu)
+                "free_ram": free_ram,
+                "used_cpu": used_cpu
             }
         })
 
