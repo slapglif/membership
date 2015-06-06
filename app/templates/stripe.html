@@ -113,6 +113,16 @@ input[type="submit"]:hover{
 
 </style>
 
+    <script>
+$(".1").focus(function(){
+  $(".1-help").slideDown(500);
+}).blur(function(){
+  $(".1-help").slideUp(500);
+});
+
+
+    </script>
+
  <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <div class="wrapper">
@@ -120,9 +130,12 @@ input[type="submit"]:hover{
   <p>Just enter the amount to donate and you will get a confirmation email from Square and xTcR.</p>
    <form action="/stripe" method="post">
     <article>
-      <label>
+      <label class="1">
           <h1>Enter Amount:</h1>
           {{ form.amount(class='form-control') }}
+               <div>
+      <p class="1-help">Please enter your current email address.</p>
+    </div>
       </label>
     </article>
 
@@ -132,10 +145,6 @@ input[type="submit"]:hover{
             data-amount="{{ amount }}"></script>
   </form>
 </div>
-<p class="optimize">
-  Optimized for Chrome & Firefox!
-</p>
-
 
 
 
