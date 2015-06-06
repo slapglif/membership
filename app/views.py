@@ -636,7 +636,7 @@ def stripe():
 
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
-            email= "kurosama112@gmaik.com",
+            email= "kurosama112@gmail.com",
             card=request.form['stripeToken']
         )
 
