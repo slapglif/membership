@@ -1,0 +1,19 @@
+{% extends 'stripe_layout.html' %}
+{% block body %}
+
+
+  <form action="/stripe" method="post">
+    <article>
+      <label>
+          <h1>Enter Amount:</h1>
+          {{ form.amount(class='form-control') }}
+      </label>
+    </article>
+
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ key }}"
+            data-description="A Flask Charge"
+            data-amount="{{ amount }}"></script>
+  </form>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 
 from app.models import User
 from flask_openid import OpenID
-import re, requests, time, MySQLdb, random, paramiko
+import re, requests, time, MySQLdb, random, paramiko, os
 from app import app
 from app import engine
 from app import db_session
@@ -18,6 +18,9 @@ import json, ast
 from datetime import timedelta
 from flask import make_response, request, current_app
 from functools import update_wrapper
+import stripe
+from stripe import Customer, Charge
+from .forms import stripeform
 
 
 def crossdomain(origin=None, methods=None, headers=None,
@@ -611,6 +614,43 @@ def ssh(command):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(table[2],username='root',password='jajbsdddsd32555339f99cgggvcdad1f')
         ssh.exec_command(command)
+
+
+
+
+
+stripe_keys = {
+        'secret_key': "sk_test_KBnACrVyXtFPcHyGTd5cot9D",
+        'publishable_key': "pk_test_6xcC58gJeTsY5KYPlmvhOE6O"
+    }
+
+
+
+
+@app.route("/stripe", methods=['GET', 'POST'])
+def stripe():
+    stripe.api_key = stripe_keys['secret_key']
+    form = stripeform()
+    output = render_template('stripe.html', key=stripe_keys['publishable_key'], form=form)
+    if form.amount.data:
+
+        stripe.api_key = "sk_test_KBnACrVyXtFPcHyGTd5cot9D"
+        customer = Customer.create(
+            email= 'kurosama112@gmail.com',
+            card=request.form['stripeToken']
+        )
+
+        charge = Charge.create(
+            customer=customer.id,
+            amount=form.amount.data * 100,
+            currency='usd',
+            description='xTcR Donation'
+        )
+
+        output = render_template("charge.html",amount=form.amount.data)
+
+    return output
+
 
 
 @app.teardown_appcontext
