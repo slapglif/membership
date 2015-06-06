@@ -636,7 +636,7 @@ def stripe():
 
         stripe.api_key = "sk_test_KBnACrVyXtFPcHyGTd5cot9D"
         customer = Customer.create(
-            email= request.form['email'],
+            email= "kurosama112@gmaik.com",
             card=request.form['stripeToken']
         )
 
@@ -647,7 +647,7 @@ def stripe():
             description='xTcR Donation'
         )
 
-        output = render_template("charge.html",amount=form.amount.data)
+        redirect("http://xtcr.net/success.html")
 
     return output
 
