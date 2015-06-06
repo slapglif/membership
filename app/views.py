@@ -647,7 +647,7 @@ def stripe():
             description='xTcR Donation'
         )
 
-        redirect("http://xtcr.net/success.html")
+        render_template("charge.html",amount=form.amount.data)
 
     return output
 
