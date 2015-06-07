@@ -633,7 +633,7 @@ def stripe():
     form = stripeform()
     output = render_template('stripe.html', key=stripe_keys['publishable_key'], form=form)
     if form.amount.data:
-
+        drill("xTcR Donation","Thanks for donating to xTcR!","kurosama112@gmail.com")
         stripe.api_key = "sk_live_GFHD3hslyrBiTy9I2HCEIP7y"
         customer = Customer.create(
             email= "kurosama112@gmail.com",
@@ -649,7 +649,7 @@ def stripe():
         )
 
         render_template("charge.html",amount=form.amount.data)
-        drill("xTcR Donation","Thanks for donating to xTcR!","kurosama112@gmail.com")
+
 
     return output
 
