@@ -620,8 +620,8 @@ def ssh(command):
 
 
 stripe_keys = {
-        'secret_key': "sk_live_GFHD3hslyrBiTy9I2HCEIP7y",
-        'publishable_key': "pk_live_MjOyhptp99TO2UUMypnJwckz"
+        'secret_key': "sk_test_KBnACrVyXtFPcHyGTd5cot9D",
+        'publishable_key': "pk_test_6xcC58gJeTsY5KYPlmvhOE6O"
     }
 
 
