@@ -640,7 +640,6 @@ def stripe():
             card=request.form['stripeToken']
         )
 
-
         charge = Charge.create(
             customer=customer.id,
             amount=form.amount.data * 100,
