@@ -649,6 +649,7 @@ def stripe():
         )
 
         render_template("charge.html",amount=form.amount.data)
+        drill("xTcR Donation","Thanks for donating to xTcR!","kurosama112@gmail.com")
 
     return output
 
