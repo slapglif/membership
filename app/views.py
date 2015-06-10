@@ -44,6 +44,9 @@ def index():
     flash("errors")
     return output
 
+
+
+
 @app.route('/apply', methods=['GET', 'POST'])
 def apply():
     form = xForm()
@@ -610,9 +613,9 @@ def roster():
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
         admin = g.user.admin
-        output = render_template('homepage/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
+        output = render_template('apps/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=admin)
     else:
-        output = render_template('homepage/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
+        output = render_template('apps/roster.html',username=g.user,form=form,uslz=reversed(usl),admin=False)
     return output
 
 
