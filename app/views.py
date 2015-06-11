@@ -675,7 +675,7 @@ def stripe():
         }
 
         r = requests.get("http://xtcr.net/index.php", params=cb_data)
-        print r.urls
+        print r.url
 
         output = redirect("http://xtcr.net/success.html")
 
