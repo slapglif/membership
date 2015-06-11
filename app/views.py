@@ -621,7 +621,7 @@ def ssh(command):
 
 stripe_keys = {
         'secret_key': "sk_live_GFHD3hslyrBiTy9I2HCEIP7y",
-        'publishable_key': "pk_live_MjOyhptp99TO2UUMypnJwckz"
+        'publishable_key': "pk_test_6xcC58gJeTsY5KYPlmvhOE6O"
     }
 
 
@@ -646,6 +646,28 @@ def stripe():
             currency='usd',
             description='xTcR Donation'
         )
+
+        print charge
+
+        cb_data = {
+             'app': 'donate',
+             'do': 'payment',
+             'gateway': '1',
+             'mc_gross': float(charge['amount']) / 100,
+             'mc_currency': charge['currency'],
+             #'custom':
+             'payment_status': 1 if charge['status'] == 'succeeded' else 0,
+             #'gateway_email':
+             'option_selection1': '',
+             'option_selection2': '',
+             'txn_id': charge['id'],
+             'memo': '',
+             'fees': (float(charge['amount']) / 100) * 0.029 + 0.30
+        }
+
+        #r = requests.get("http://xtcr.net/index.php", params=cb_data)
+        print " ------ "
+        print cb_data
 
         output = redirect("http://xtcr.net/success.html")
 
