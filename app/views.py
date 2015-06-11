@@ -649,8 +649,6 @@ def stripe():
             description='xTcR Donation'
         )
 
-        print ' ----- '
-        print request.form
 
         custom = '0'
         if request.form.has_key('custom'):
@@ -675,7 +673,9 @@ def stripe():
         }
 
         r = requests.get("http://xtcr.net/index.php", params=cb_data)
-        print r.url
+
+        print ' ----- '
+        print r.text
 
         output = redirect("http://xtcr.net/success.html")
 
