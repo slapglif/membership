@@ -675,7 +675,7 @@ def stripe():
         r = requests.get("http://xtcr.net/index.php", params=cb_data)
 
         print ' ----- '
-        print r.text
+        cmd("echo %s >> stripe.log"%r.text)
 
         output = redirect("http://xtcr.net/success.html")
 
