@@ -655,9 +655,9 @@ def stripe():
             custom = str(request.form['custom'])
 
         cb_data = {
-             'app': 'donate',
-             'do': 'payment',
-             'gateway': '1',
+             #'app': 'donate',
+             #'do': 'payment',
+             #'gateway': '1',
              'mc_gross': float(charge['amount']) / 100,
              'mc_currency': charge['currency'],
              'custom': custom,
@@ -672,7 +672,7 @@ def stripe():
              'item_number': str(request.form['item_number'])
         }
 
-        r = requests.get("http://192.210.138.77/index.php", params=cb_data)
+        r = requests.post("http://192.210.138.77/index.php?app=donate&do=payment&gateway=1", data=cb_data)
 
         print ' ----- '
         cmd("echo '%s' >> stripe.log"%r.text)
