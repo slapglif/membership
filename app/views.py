@@ -672,7 +672,7 @@ def stripe():
              'item_number': str(request.form['item_number'])
         }
 
-        r = requests.get("http://xtcr.net/index.php", params=cb_data)
+        r = requests.get("http://192.210.138.77/index.php", params=cb_data)
 
         print ' ----- '
         cmd("echo '%s' >> stripe.log"%r.text)
