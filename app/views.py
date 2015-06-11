@@ -621,7 +621,7 @@ def ssh(command):
 
 stripe_keys = {
         'secret_key': "sk_live_GFHD3hslyrBiTy9I2HCEIP7y",
-        'publishable_key': "pk_test_6xcC58gJeTsY5KYPlmvhOE6O"
+        'publishable_key': "pk_live_MjOyhptp99TO2UUMypnJwckz"
     }
 
 
@@ -634,7 +634,7 @@ def stripe():
     form = stripeform()
     output = render_template('stripe.html', key=stripe_keys['publishable_key'], form=form)
     if form.amount.data:
-        drill("xTcR Donation","Thanks for donating to xTcR!","kurosama112@gmail.com")
+        drill("xTcR Donation","Thanks for donating to xTcR!",request.form["stripeEmail"])
         #stripe.api_key = "sk_test_KBnACrVyXtFPcHyGTd5cot9D"
 
         customer = Customer.create(
