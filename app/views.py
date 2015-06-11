@@ -629,6 +629,7 @@ stripe_keys = {
 
 @app.route("/stripe", methods=['GET', 'POST'])
 def stripe():
+    print '--- got stripe request ---'
     stripe.api_key = stripe_keys['secret_key']
     form = stripeform()
     output = render_template('stripe.html', key=stripe_keys['publishable_key'], form=form)
