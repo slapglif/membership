@@ -635,8 +635,9 @@ def stripe():
     if form.amount.data:
         drill("xTcR Donation","Thanks for donating to xTcR!","kurosama112@gmail.com")
         #stripe.api_key = "sk_test_KBnACrVyXtFPcHyGTd5cot9D"
+
         customer = Customer.create(
-            email= "kurosama112@gmail.com",
+            email= request.form["stripeEmail"],
             card=request.form['stripeToken']
         )
 
@@ -647,7 +648,9 @@ def stripe():
             description='xTcR Donation'
         )
 
-        print charge
+        custom = '0'
+        if request.form.has_key('custom'):
+            custom = str(request.form['custom'])
 
         cb_data = {
              'app': 'donate',
@@ -655,19 +658,18 @@ def stripe():
              'gateway': '1',
              'mc_gross': float(charge['amount']) / 100,
              'mc_currency': charge['currency'],
-             #'custom':
-             'payment_status': 1 if charge['status'] == 'succeeded' else 0,
-             #'gateway_email':
+             'custom': custom,
+             'payment_status': 'Completed' if charge['status'] == 'succeeded' else charge['status'],
+             'business': charge['receipt_email'],
              'option_selection1': '',
              'option_selection2': '',
              'txn_id': charge['id'],
-             'memo': '',
+             'memo': 'stripe',
              'fees': (float(charge['amount']) / 100) * 0.029 + 0.30
         }
 
-        #r = requests.get("http://xtcr.net/index.php", params=cb_data)
-        print " ------ "
-        print cb_data
+        r = requests.get("http://xtcr.net/index.php", params=cb_data)
+        print r.url
 
         output = redirect("http://xtcr.net/success.html")
 
