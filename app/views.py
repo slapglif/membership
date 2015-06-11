@@ -649,6 +649,9 @@ def stripe():
             description='xTcR Donation'
         )
 
+        print ' ----- '
+        print request.form
+
         custom = '0'
         if request.form.has_key('custom'):
             custom = str(request.form['custom'])
@@ -666,11 +669,13 @@ def stripe():
              'option_selection2': '',
              'txn_id': charge['id'],
              'memo': 'stripe',
-             'fees': (float(charge['amount']) / 100) * 0.029 + 0.30
+             'fees': (float(charge['amount']) / 100) * 0.029 + 0.30,
+             'item_name': str(request.form['item_name']),
+             'item_number': str(request.form['item_number'])
         }
 
         r = requests.get("http://xtcr.net/index.php", params=cb_data)
-        print r.url
+        print r.urls
 
         output = redirect("http://xtcr.net/success.html")
 
