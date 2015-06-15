@@ -106,9 +106,15 @@
 
             <hr>
 <div align="center">
-      {{ form.submit(class="btn btn-lg btn-danger", role="button") }}
+      {{ form.submit(class="btn btn-lg btn-danger", role="button", id='sbtn') }}
 </div>
 
+        <script>
+
+        $('input:submit').click(function(){
+	        $('input:submit').attr("disabled", true);
+                });
+        </script>
 
 
 
