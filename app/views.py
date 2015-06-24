@@ -683,6 +683,13 @@ def stripe():
     return output
 
 
+@app.route('/gcp')
+def gcp():
+    output = "fuck GCP"
+
+    return output
+
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
